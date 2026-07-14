@@ -413,10 +413,26 @@ function renderFooter(): HTMLElement {
         className: "footer-shell",
         children: [
           el("div", {
+            className: "footer-brand",
             children: [
-              el("strong", { text: "Fohryu Works" }),
-              el("p", {
-                text: `© ${year}. Site expérimental, statique, et volontairement en évolution.`
+              el("img", {
+                className: "footer-brand__mark",
+                attrs: {
+                  src: "/ryuuko/exports/ryuuko-watermark-150.png",
+                  alt: "",
+                  width: 150,
+                  height: 150,
+                  loading: "lazy",
+                  decoding: "async"
+                }
+              }),
+              el("div", {
+                children: [
+                  el("strong", { text: "Fohryu Works" }),
+                  el("p", {
+                    text: `© ${year}. Site expérimental, statique, et volontairement en évolution.`
+                  })
+                ]
               })
             ]
           }),
