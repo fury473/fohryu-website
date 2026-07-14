@@ -8,6 +8,25 @@ import {
 import { navLinks, nowItems, principles, spaces, type Space } from "../data/site";
 import { el, link } from "./dom";
 
+const KONAMI_SEQUENCE = [
+  "ArrowUp",
+  "ArrowUp",
+  "ArrowDown",
+  "ArrowDown",
+  "ArrowLeft",
+  "ArrowRight",
+  "ArrowLeft",
+  "ArrowRight",
+  "b",
+  "a"
+] as const;
+
+const FURY_ORIGIN_TEXT = [
+  "Fury est un pseudonyme créé dans les années 2000 lorsque je cherchais un nom durant mes games fun de Counter-Strike: Source (l’époque des chats vocaux ouverts sur serveurs privés).",
+  "Le suffixe 473 est arrivé quasiment en même temps, sauf qu’à l’époque c’était sans doute avec une tonne de caractères Unicode / CharMap comme c’était la mode sur MSN (... bref).",
+  "Toute ressemblance avec certaines communautés animalières est purement fortuite, même si les confusions me font aujourd’hui plutôt sourire."
+] as const;
+
 export function renderApp(root: HTMLElement): void {
   const sortedProjects = [...projects].sort((a, b) => a.sortOrder - b.sortOrder);
 
@@ -24,10 +43,12 @@ export function renderApp(root: HTMLElement): void {
         renderSpaces(),
         renderFooter()
       ]
-    })
+    }),
+    renderFuryOriginModal()
   );
 
   setupRevealAnimations();
+  setupKonamiCode();
 }
 
 function renderHeader(): HTMLElement {
@@ -340,6 +361,61 @@ function renderFooter(): HTMLElement {
   });
 }
 
+function renderFuryOriginModal(): HTMLElement {
+  return el("div", {
+    className: "easter-egg-modal",
+    attrs: {
+      id: "fury-origin-modal",
+      role: "dialog",
+      "aria-modal": "true",
+      "aria-labelledby": "fury-origin-title",
+      "aria-describedby": "fury-origin-description",
+      hidden: true
+    },
+    children: [
+      el("div", {
+        className: "easter-egg-modal__panel",
+        attrs: { tabindex: "-1" },
+        children: [
+          el("h2", {
+            className: "sr-only",
+            text: "L'origine du pseudo Fury",
+            attrs: { id: "fury-origin-title" }
+          }),
+          el("div", {
+            className: "sr-only",
+            attrs: { id: "fury-origin-description" },
+            children: FURY_ORIGIN_TEXT.map((paragraph) => el("p", { text: paragraph }))
+          }),
+          el("div", {
+            className: "easter-egg-modal__card",
+            children: [
+              el("button", {
+                className: "easter-egg-modal__close",
+                text: "×",
+                attrs: {
+                  type: "button",
+                  "aria-label": "Fermer l'easter egg"
+                }
+              }),
+              el("img", {
+                className: "easter-egg-modal__image",
+                attrs: {
+                  src: "/ryuuko/exports/origin-of-fury-card-900x957.png",
+                  alt: "Illustration de Ryūko sur l'origine du pseudo Fury.",
+                  width: 900,
+                  height: 957,
+                  decoding: "async"
+                }
+              })
+            ]
+          })
+        ]
+      })
+    ]
+  });
+}
+
 function renderSection(
   id: string,
   title: string,
@@ -388,4 +464,137 @@ function setupRevealAnimations(): void {
   );
 
   targets.forEach((target) => observer.observe(target));
+}
+
+function setupKonamiCode(): void {
+  const modal = document.querySelector<HTMLElement>("#fury-origin-modal");
+  const panel = modal?.querySelector<HTMLElement>(".easter-egg-modal__panel");
+  const closeButton = modal?.querySelector<HTMLButtonElement>(".easter-egg-modal__close");
+
+  if (!modal || !panel || !closeButton) {
+    return;
+  }
+
+  let sequenceIndex = 0;
+  let previouslyFocused: HTMLElement | null = null;
+
+  const openModal = (): void => {
+    if (!modal.hidden) {
+      return;
+    }
+
+    previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    modal.hidden = false;
+    document.body.classList.add("modal-open");
+
+    window.requestAnimationFrame(() => {
+      modal.classList.add("is-open");
+      closeButton.focus({ preventScroll: true });
+    });
+  };
+
+  const closeModal = (): void => {
+    if (modal.hidden) {
+      return;
+    }
+
+    modal.classList.remove("is-open");
+    document.body.classList.remove("modal-open");
+
+    const finishClose = (): void => {
+      modal.hidden = true;
+      previouslyFocused?.focus({ preventScroll: true });
+      previouslyFocused = null;
+    };
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      finishClose();
+      return;
+    }
+
+    window.setTimeout(finishClose, 180);
+  };
+
+  const trapFocus = (event: KeyboardEvent): void => {
+    const focusableElements = getFocusableElements(modal);
+
+    if (focusableElements.length === 0) {
+      event.preventDefault();
+      panel.focus({ preventScroll: true });
+      return;
+    }
+
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+
+    if (event.shiftKey && document.activeElement === firstElement) {
+      event.preventDefault();
+      lastElement.focus();
+      return;
+    }
+
+    if (!event.shiftKey && document.activeElement === lastElement) {
+      event.preventDefault();
+      firstElement.focus();
+    }
+  };
+
+  closeButton.addEventListener("click", closeModal);
+  modal.addEventListener("click", (event) => {
+    if (event.target === modal) {
+      closeModal();
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (!modal.hidden) {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeModal();
+      }
+
+      if (event.key === "Tab") {
+        trapFocus(event);
+      }
+
+      return;
+    }
+
+    const expectedKey = KONAMI_SEQUENCE[sequenceIndex];
+    const pressedKey = getKonamiKey(event);
+
+    if (pressedKey === expectedKey) {
+      sequenceIndex += 1;
+    } else {
+      sequenceIndex = pressedKey === KONAMI_SEQUENCE[0] ? 1 : 0;
+    }
+
+    if (sequenceIndex === KONAMI_SEQUENCE.length) {
+      sequenceIndex = 0;
+      openModal();
+    }
+  });
+}
+
+function getFocusableElements(container: HTMLElement): HTMLElement[] {
+  const selector = [
+    "button:not([disabled])",
+    "a[href]",
+    "input:not([disabled])",
+    "select:not([disabled])",
+    "textarea:not([disabled])",
+    '[tabindex]:not([tabindex="-1"])'
+  ].join(",");
+
+  return [...container.querySelectorAll<HTMLElement>(selector)].filter(
+    (element) => !element.hasAttribute("hidden") && element.offsetParent !== null
+  );
+}
+
+function getKonamiKey(event: KeyboardEvent): string {
+  if (event.key.length === 1) {
+    return event.key.toLowerCase();
+  }
+
+  return event.key;
 }
