@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Fohryu Works">
+  <defs>
+    <linearGradient id="fw-bg" x1="10" y1="10" x2="54" y2="54" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ff5a67"/>
+      <stop offset="1" stop-color="#ffb36a"/>
+    </linearGradient>
+  </defs>
+  <rect x="6" y="6" width="52" height="52" rx="12" fill="url(#fw-bg)"/>
+  <text
+    x="30"
+    y="42"
+    fill="#090706"
+    font-family="Arial Black, Arial, Helvetica, sans-serif"
+    font-size="27"
+    font-weight="900"
+    letter-spacing="-3"
+    text-anchor="middle"
+  >FW</text>
+</svg>
