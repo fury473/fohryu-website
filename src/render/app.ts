@@ -5,7 +5,15 @@ import {
   visibilityLabels,
   type Project
 } from "../data/projects";
-import { navLinks, nowItems, principles, spaces, type Space } from "../data/site";
+import {
+  activityItems,
+  navLinks,
+  nowItems,
+  principles,
+  spaces,
+  type ActivityItem,
+  type Space
+} from "../data/site";
 import { el, link } from "./dom";
 
 const KONAMI_SEQUENCE = [
@@ -36,6 +44,7 @@ export function renderApp(root: HTMLElement): void {
       attrs: { id: "contenu" },
       children: [
         renderHero(),
+        renderActivity(),
         renderNow(),
         renderProjects(sortedProjects),
         renderConnections(),
@@ -95,13 +104,14 @@ function renderHero(): HTMLElement {
                 className: "action-row",
                 children: [
                   link("Voir les projets", "#projets", "button button--primary"),
+                  link("Récemment", "#activite", "button button--secondary"),
                   link("Maintenant", "#maintenant", "button button--secondary")
                 ]
               }),
               el("p", {
                 className: "hero__quote",
                 text:
-                  "La meilleure technologie n'ajoute pas quelque chose à la vie. Elle retire ce qui empêchait déjà de la vivre."
+                  "La meilleure technologie est celle qui devient invisible au profit de l'expérience."
               })
             ]
           }),
@@ -157,6 +167,70 @@ function renderNow(): HTMLElement {
       ]
     })
   ]);
+}
+
+function renderActivity(): HTMLElement {
+  return renderSection("activite", "Récemment", "Les dernières traces publiées.", [
+    el("div", {
+      className: "activity-feed reveal",
+      children: activityItems.map(renderActivityCard)
+    })
+  ]);
+}
+
+function renderActivityCard(item: ActivityItem): HTMLElement {
+  const media = item.thumbnail
+    ? el("a", {
+        className: "activity-card__media",
+        attrs: {
+          href: item.url,
+          target: "_blank",
+          rel: "noreferrer",
+          "aria-label": `Ouvrir ${item.title} sur ${item.source}`
+        },
+        children: [
+          el("img", {
+            attrs: {
+              src: item.thumbnail.src,
+              alt: item.thumbnail.alt,
+              width: item.thumbnail.width,
+              height: item.thumbnail.height,
+              loading: "lazy",
+              decoding: "async"
+            }
+          })
+        ]
+      })
+    : null;
+
+  return el("article", {
+    className: `activity-card${item.thumbnail ? " activity-card--with-media" : ""}`,
+    children: [
+      media,
+      el("div", {
+        className: "activity-card__body",
+        children: [
+          el("div", {
+            className: "card-meta",
+            children: [
+              el("span", { className: "pill", text: item.source }),
+              el("time", {
+                className: "activity-card__date",
+                text: item.dateLabel,
+                attrs: { datetime: item.datetime }
+              })
+            ]
+          }),
+          el("h3", { text: item.title }),
+          el("div", {
+            className: "activity-card__copy",
+            children: item.body.map((paragraph) => el("p", { text: paragraph }))
+          }),
+          link("Ouvrir la publication", item.url, "button button--secondary activity-card__button")
+        ]
+      })
+    ]
+  });
 }
 
 function renderProjects(sortedProjects: Project[]): HTMLElement {

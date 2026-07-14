@@ -17,11 +17,25 @@ export type Space = {
   access: "public" | "planned" | "protected";
 };
 
+export type ActivityItem = {
+  id: string;
+  source: "Instagram" | "Journal" | "YouTube" | "GitHub";
+  title: string;
+  dateLabel: string;
+  datetime: string;
+  body: string[];
+  url: string;
+  thumbnail?: {
+    src: string;
+    alt: string;
+    width: number;
+    height: number;
+  };
+};
+
 export const navLinks = [
   { label: "Projets", href: "#projets" },
-  { label: "Hub", href: "https://hub.fohryu.com/" },
-  { label: "Explorations", href: "#project-explorations-ai" },
-  { label: "Contact", href: "#espaces" }
+  { label: "Explorations", href: "#project-explorations-ai" }
 ] as const;
 
 export const nowItems: NowItem[] = [
@@ -42,12 +56,6 @@ export const nowItems: NowItem[] = [
       "Faire le ménage, clarifier le branding, retravailler la description, préparer l'intro et poser les premières vidéos de contenu."
   },
   {
-    id: "instagram-first-post",
-    title: "Premier post Instagram",
-    description:
-      "Préparer une première publication imminente pour amorcer la présence visuelle autour des explorations et des projets."
-  },
-  {
     id: "moving-ai",
     title: "Explorations en mouvement",
     description: "Marcher, courir, observer et dialoguer avec une IA comme compagnon de route."
@@ -62,6 +70,21 @@ export const nowItems: NowItem[] = [
     title: "Structuration du Hub",
     description:
       "Consolider un espace privé où je documente mes idées de manière détaillée. Une version publique viendra en cours de route, le temps de stabiliser mes priorités."
+  }
+];
+
+export const activityItems: ActivityItem[] = [
+  {
+    id: "instagram-urban-exploration",
+    source: "Instagram",
+    title: "Balade vide-méninges, IA et exploration urbaine.",
+    dateLabel: "9 juillet 2026",
+    datetime: "2026-07-09",
+    body: [
+      "Parti pour courir quelques kilomètres afin de me vider l'esprit. Finalement, la sortie s'est transformée en près de trois heures de marche, de discussions avec ChatGPT, d'exploration du parc de Gerland, de photos... et de quelques rencontres imprévues.",
+      "Parfois, les meilleures idées naissent simplement lorsqu'on laisse le temps au temps."
+    ],
+    url: "https://www.instagram.com/p/DayjM9-jUZX/"
   }
 ];
 
