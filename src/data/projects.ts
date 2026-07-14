@@ -144,8 +144,8 @@ export const projects: Project[] = [
       "Configuration, documentation et expérimentations autour de Home Assistant.",
     category: "Domotique / documentation",
     status: "usable",
-    visibility: "public",
-    links: [{ label: "ha-config.fohryu.com", url: "https://ha-config.fohryu.com/" }],
+    visibility: "mixed",
+    links: [],
     featured: false,
     sortOrder: 90
   },
