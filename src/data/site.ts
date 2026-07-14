@@ -36,6 +36,18 @@ export const nowItems: NowItem[] = [
     description: "Transformer les expériences et décisions du quotidien en mémoire structurée."
   },
   {
+    id: "youtube-refresh",
+    title: "Mise à jour de la chaîne YouTube",
+    description:
+      "Faire le ménage, clarifier le branding, retravailler la description, préparer l'intro et poser les premières vidéos de contenu."
+  },
+  {
+    id: "instagram-first-post",
+    title: "Premier post Instagram",
+    description:
+      "Préparer une première publication imminente pour amorcer la présence visuelle autour des explorations et des projets."
+  },
+  {
     id: "moving-ai",
     title: "Explorations en mouvement",
     description: "Marcher, courir, observer et dialoguer avec une IA comme compagnon de route."
@@ -48,7 +60,8 @@ export const nowItems: NowItem[] = [
   {
     id: "hub-structure",
     title: "Structuration du Hub",
-    description: "Relier décisions, procédures, recherches et projets dans une base documentaire durable."
+    description:
+      "Consolider un espace privé où je documente mes idées de manière détaillée. Une version publique viendra en cours de route, le temps de stabiliser mes priorités."
   }
 ];
 
@@ -89,7 +102,7 @@ export const spaces: Space[] = [
     access: "planned"
   },
   {
-    title: "YouTube / Fury473",
+    title: "YouTube",
     description: "Vidéos, formats expérimentaux et contenus issus des explorations.",
     url: "https://www.youtube.com/@Fury473",
     label: "@Fury473",

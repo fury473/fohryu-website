@@ -118,7 +118,7 @@ function renderNow(): HTMLElement {
             el("span", { className: "signal-dot", attrs: { "aria-hidden": "true" } }),
             el("p", {
               text:
-                "La réponse courte à la question : qu'est-ce qu'Olivier construit actuellement ?"
+                "La réponse courte à la question : qu'est-ce que Fury construit actuellement ?"
             })
           ]
         }),
