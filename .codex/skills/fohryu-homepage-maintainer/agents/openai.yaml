@@ -1,0 +1,4 @@
+interface:
+  display_name: "Fohryu Homepage Maintainer"
+  short_description: "Maintain the fohryu.com homepage"
+  default_prompt: "Use $fohryu-homepage-maintainer to update the public fohryu.com homepage."

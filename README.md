@@ -26,13 +26,13 @@ npm run dev
 
 Le serveur Vite expose le site en local. Les contenus principaux sont dans :
 
-- `src/data/projects.ts` pour la cartographie des projets ;
-- `src/data/site.ts` pour la navigation, la section Maintenant, les principes et les espaces ;
-- `src/render/` pour les fonctions de rendu ;
-- `src/styles/main.css` pour l'identité visuelle.
+- `src/data/` pour les contenus structurés ;
+- `src/render/` pour le rendu DOM ;
+- `src/styles/` pour l'identité visuelle.
 
-Une documentation plus détaillée de la composition de la page est disponible dans
-[`docs/homepage-architecture.md`](docs/homepage-architecture.md).
+Pour comprendre la composition de la page, voir
+[`docs/homepage-architecture.md`](docs/homepage-architecture.md). Pour les
+consignes destinées aux agents de maintenance, voir [`AGENTS.md`](AGENTS.md).
 
 ## Build
 
