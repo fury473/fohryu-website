@@ -118,17 +118,49 @@ function renderHero(): HTMLElement {
           el("figure", {
             className: "hero-map reveal",
             children: [
-              el("img", {
-                attrs: {
-                  src: "/atelier-map.svg",
-                  alt: "Carte stylisée reliant les projets de Fohryu Works",
-                  width: 780,
-                  height: 560,
-                  decoding: "async"
-                }
+              el("div", {
+                className: "hero-map__bar",
+                attrs: { "aria-hidden": "true" },
+                children: [
+                  el("span", { text: "Workbench map" }),
+                  el("span", { text: "FW-01" })
+                ]
+              }),
+              el("div", {
+                className: "hero-map__viewport",
+                children: [
+                  el("img", {
+                    attrs: {
+                      src: "/atelier-map.svg",
+                      alt: "Carte stylisée reliant les projets de Fohryu Works",
+                      width: 780,
+                      height: 560,
+                      decoding: "async"
+                    }
+                  }),
+                  el("img", {
+                    className: "hero-map__mark",
+                    attrs: {
+                      src: "/ryuuko/exports/ryuuko-watermark-150.png",
+                      alt: "",
+                      width: 150,
+                      height: 150,
+                      decoding: "async",
+                      "aria-hidden": "true"
+                    }
+                  }),
+                  el("span", {
+                    className: "hero-map__stamp",
+                    text: "Atelier vivant",
+                    attrs: { "aria-hidden": "true" }
+                  })
+                ]
               }),
               el("figcaption", {
-                text: "Une carte de travail, pas un plan figé."
+                children: [
+                  el("span", { text: "Une carte de travail, pas un plan figé." }),
+                  el("span", { className: "hero-map__caption-code", text: "signal / v0.1" })
+                ]
               })
             ]
           })
@@ -287,6 +319,11 @@ function renderProjectCard(project: Project, featured: boolean): HTMLElement {
     .join(" ");
 
   const children = [
+    el("span", {
+      className: "project-card__index",
+      text: `P-${String(project.sortOrder).padStart(3, "0")}`,
+      attrs: { "aria-hidden": "true" }
+    }),
     el("div", {
       className: "card-meta",
       children: [
