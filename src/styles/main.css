@@ -956,14 +956,36 @@ p {
   min-width: 0;
 }
 
-.footer-brand__mark {
+.footer-brand__mark-trigger {
   flex: 0 0 auto;
+  display: inline-grid;
+  place-items: center;
   width: 5rem;
   height: 5rem;
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  touch-action: manipulation;
+}
+
+.footer-brand__mark {
+  width: 100%;
+  height: 100%;
   opacity: 0.8;
   filter:
     drop-shadow(0 0 10px rgba(255, 90, 103, 0.58))
     drop-shadow(0 0 18px rgba(255, 179, 106, 0.26));
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease;
+}
+
+.footer-brand__mark-trigger:hover .footer-brand__mark,
+.footer-brand__mark-trigger:focus-visible .footer-brand__mark {
+  opacity: 1;
+  transform: scale(1.04);
 }
 
 .footer-links {

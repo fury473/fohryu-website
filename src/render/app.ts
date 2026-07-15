@@ -29,6 +29,9 @@ const KONAMI_SEQUENCE = [
   "a"
 ] as const;
 
+const FURY_ORIGIN_TAP_COUNT = 7;
+const FURY_ORIGIN_TAP_RESET_MS = 1800;
+
 const FURY_ORIGIN_TEXT = [
   "Fury est un pseudonyme créé dans les années 2000 lorsque je cherchais un nom durant mes games fun de Counter-Strike: Source (l’époque des chats vocaux ouverts sur serveurs privés).",
   "Le suffixe 473 est arrivé quasiment en même temps, sauf qu’à l’époque c’était sans doute avec une tonne de caractères Unicode / CharMap comme c’était la mode sur MSN (... bref).",
@@ -57,7 +60,7 @@ export function renderApp(root: HTMLElement): void {
   );
 
   setupRevealAnimations();
-  setupKonamiCode();
+  setupFuryOriginEasterEgg();
 }
 
 function renderHeader(): HTMLElement {
@@ -452,16 +455,27 @@ function renderFooter(): HTMLElement {
           el("div", {
             className: "footer-brand",
             children: [
-              el("img", {
-                className: "footer-brand__mark",
+              el("button", {
+                className: "footer-brand__mark-trigger",
                 attrs: {
-                  src: "/ryuuko/exports/ryuuko-watermark-150.png",
-                  alt: "",
-                  width: 150,
-                  height: 150,
-                  loading: "lazy",
-                  decoding: "async"
-                }
+                  type: "button",
+                  "aria-label": "Signature Ryūko",
+                  "data-fury-origin-trigger": "true"
+                },
+                children: [
+                  el("img", {
+                    className: "footer-brand__mark",
+                    attrs: {
+                      src: "/ryuuko/exports/ryuuko-watermark-150.png",
+                      alt: "",
+                      width: 150,
+                      height: 150,
+                      loading: "lazy",
+                      decoding: "async",
+                      "aria-hidden": "true"
+                    }
+                  })
+                ]
               }),
               el("div", {
                 children: [
@@ -593,23 +607,36 @@ function setupRevealAnimations(): void {
   targets.forEach((target) => observer.observe(target));
 }
 
-function setupKonamiCode(): void {
+function setupFuryOriginEasterEgg(): void {
   const modal = document.querySelector<HTMLElement>("#fury-origin-modal");
   const panel = modal?.querySelector<HTMLElement>(".easter-egg-modal__panel");
   const closeButton = modal?.querySelector<HTMLButtonElement>(".easter-egg-modal__close");
+  const tapTrigger = document.querySelector<HTMLButtonElement>("[data-fury-origin-trigger]");
 
   if (!modal || !panel || !closeButton) {
     return;
   }
 
   let sequenceIndex = 0;
+  let tapCount = 0;
+  let tapResetTimer: number | undefined;
   let previouslyFocused: HTMLElement | null = null;
+
+  const resetTapSequence = (): void => {
+    tapCount = 0;
+
+    if (tapResetTimer !== undefined) {
+      window.clearTimeout(tapResetTimer);
+      tapResetTimer = undefined;
+    }
+  };
 
   const openModal = (): void => {
     if (!modal.hidden) {
       return;
     }
 
+    resetTapSequence();
     previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     modal.hidden = false;
     document.body.classList.add("modal-open");
@@ -642,6 +669,25 @@ function setupKonamiCode(): void {
     window.setTimeout(finishClose, 180);
   };
 
+  const registerTapTrigger = (): void => {
+    if (!modal.hidden) {
+      return;
+    }
+
+    tapCount += 1;
+
+    if (tapCount >= FURY_ORIGIN_TAP_COUNT) {
+      openModal();
+      return;
+    }
+
+    if (tapResetTimer !== undefined) {
+      window.clearTimeout(tapResetTimer);
+    }
+
+    tapResetTimer = window.setTimeout(resetTapSequence, FURY_ORIGIN_TAP_RESET_MS);
+  };
+
   const trapFocus = (event: KeyboardEvent): void => {
     const focusableElements = getFocusableElements(modal);
 
@@ -667,6 +713,8 @@ function setupKonamiCode(): void {
   };
 
   closeButton.addEventListener("click", closeModal);
+  tapTrigger?.addEventListener("click", registerTapTrigger);
+
   modal.addEventListener("click", (event) => {
     if (event.target === modal) {
       closeModal();

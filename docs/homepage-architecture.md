@@ -167,19 +167,28 @@ hero, tout en restant secondaire par rapport au contenu.
 
 ## Easter egg Fury
 
-L'easter egg est déclenché par le Konami Code :
+L'easter egg peut être déclenché de deux manières :
+
+- au clavier, par le Konami Code ;
+- sur mobile ou à la souris, par 7 activations rapides de la signature Ryūko du
+  footer.
+
+Le Konami Code attendu est :
 
 ```text
 ↑ ↑ ↓ ↓ ← → ← → B A
 ```
 
-Le mécanisme est géré par `setupKonamiCode()` :
+Le mécanisme est géré par `setupFuryOriginEasterEgg()` :
 
 - un index suit la progression dans `KONAMI_SEQUENCE` ;
 - les touches alphabétiques sont normalisées en minuscules ;
 - une mauvaise touche remet la séquence à zéro, sauf si elle correspond au début
   de la séquence ;
-- lorsque la séquence est complète, la modale `#fury-origin-modal` s'ouvre.
+- le déclencheur tactile compte les activations de la signature Ryūko et remet la
+  séquence à zéro après un court délai ;
+- lorsque l'une des séquences est complète, la modale `#fury-origin-modal`
+  s'ouvre.
 
 La modale contient l'image
 `/ryuuko/exports/origin-of-fury-card-900x957.png`. L'image garde son ratio, n'est
@@ -198,6 +207,8 @@ Les principaux choix d'accessibilité sont :
 - modale avec `role="dialog"`, `aria-modal`, titre et description associés ;
 - texte complet de l'easter egg disponible en `.sr-only`, sans dupliquer la
   lecture de l'image ;
+- déclencheur mobile exposé comme bouton discret autour de la signature Ryūko du
+  footer ;
 - bouton de fermeture indépendant de l'image ;
 - fermeture par Échap et clic hors panneau ;
 - focus replacé sur l'élément précédemment actif après fermeture ;
