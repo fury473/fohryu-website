@@ -31,6 +31,9 @@ Le serveur Vite expose le site en local. Les contenus principaux sont dans :
 - `src/render/` pour les fonctions de rendu ;
 - `src/styles/main.css` pour l'identité visuelle.
 
+Une documentation plus détaillée de la composition de la page est disponible dans
+[`docs/homepage-architecture.md`](docs/homepage-architecture.md).
+
 ## Build
 
 ```bash
