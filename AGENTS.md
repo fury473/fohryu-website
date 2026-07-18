@@ -91,12 +91,15 @@ versioned by Git, but they are not software increments and must not by themselve
 trigger a new SemVer version.
 
 The application uses SemVer tags on the default branch for software releases.
+Git tag names must use bare SemVer without a leading `v`, for example `0.2.0`
+instead of `v0.2.0`; the site adds the `v` prefix only in the public display.
 During feature work, plan the next minor version; during hotfix work, plan the
 next patch version; for breaking or major shifts, plan the next major version. If
 Git metadata is available, the app displays the latest reachable SemVer tag as
-the software version and the current short commit ref as the exact revision.
-Do not add a root `package.json` version as a competing source of truth; this
-private package uses Git tags for public software versioning.
+the software version, for example Git tag `0.2.0` displayed as `v0.2.0`, and the
+current short commit ref as the exact revision. Do not add a root `package.json`
+version as a competing source of truth; this private package uses Git tags for
+public software versioning.
 
 ## Validation And Git
 

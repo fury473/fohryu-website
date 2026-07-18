@@ -30,14 +30,17 @@ lien d'évitement, le conteneur `#app`, le fallback `noscript` et charge
 `vite.config.ts` calcule au build les métadonnées publiques injectées dans le
 bundle : version logicielle affichée, révision exacte, URL d'historique des
 commits et date ISO du dernier commit. La version logicielle vient du dernier tag
-SemVer atteignable, affiché avec un préfixe `v`. La révision exacte vient du
-short SHA du commit buildé et peut être liée au commit public. Si Git ou `.git`
-n'est pas disponible dans l'environnement de build, la date injectée vaut `null`
-et les libellés Git utilisent un fallback explicite.
+SemVer atteignable. Le nom réel du tag Git est sans préfixe `v`, par exemple
+`0.2.0`; le préfixe est ajouté uniquement pour l'affichage public sous la forme
+`v0.2.0`. La révision exacte vient du short SHA du commit buildé et peut être
+liée au commit public. Si Git ou `.git` n'est pas disponible dans l'environnement
+de build, la date injectée vaut `null` et les libellés Git utilisent un fallback
+explicite.
 
 Les tags SemVer sont posés sur la branche par défaut pour les incréments
-logiciels. Une branche de feature prépare l'incrément mineur suivant, une branche
-de hotfix prépare l'incrément patch suivant, et une évolution de rupture prépare
+logiciels et suivent le format Git réel `MAJOR.MINOR.PATCH`, sans préfixe `v`.
+Une branche de feature prépare l'incrément mineur suivant, une branche de hotfix
+prépare l'incrément patch suivant, et une évolution de rupture prépare
 l'incrément majeur suivant. Les modifications purement éditoriales restent
 versionnées par Git mais ne déclenchent pas à elles seules une nouvelle version
 SemVer. Tant que le commit buildé n'est pas taggé, l'affichage public de version

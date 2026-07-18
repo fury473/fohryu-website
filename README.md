@@ -55,12 +55,14 @@ de contenu ou état existant dans `Maintenant`. Elles restent versionnées par G
 mais ne constituent pas un incrément logiciel et ne déclenchent pas à elles seules
 une nouvelle version SemVer.
 
-L'application suit SemVer via les tags posés sur la branche par défaut. Une
-feature prépare normalement la prochaine version mineure, un hotfix la prochaine
-version patch, et une évolution majeure la prochaine version majeure. Si le commit
-buildé n'a pas lui-même de tag SemVer, la dernière version logicielle publiée
-reste le dernier tag SemVer atteignable. La révision exacte affichée séparément
-utilise le short SHA du commit buildé.
+L'application suit SemVer via les tags posés sur la branche par défaut. Les noms
+réels des tags Git utilisent le format `MAJOR.MINOR.PATCH` sans préfixe `v`, par
+exemple `0.2.0`. Le préfixe `v` est ajouté uniquement dans l'affichage public, où
+ce tag devient `v0.2.0`. Une feature prépare normalement la prochaine version
+mineure, un hotfix la prochaine version patch, et une évolution majeure la
+prochaine version majeure. Si le commit buildé n'a pas lui-même de tag SemVer, la
+dernière version logicielle publiée reste le dernier tag SemVer atteignable. La
+révision exacte affichée séparément utilise le short SHA du commit buildé.
 
 `package.json` ne porte volontairement pas de champ `version` : le package est
 privé et n'est pas publié sur npm. La source de vérité pour la version publique du
@@ -76,8 +78,9 @@ La sortie statique est produite dans `dist/`. Pendant le build, Vite tente de li
 la date du dernier commit Git pour afficher la mention `Dernière modification`
 dans le footer. Si les métadonnées Git ne sont pas disponibles, le site reste
 buildable et affiche un fallback explicite. La version logicielle affichée sur la
-page vient du dernier tag SemVer atteignable, par exemple `v0.2.0`. La révision
-exacte du build est affichée séparément avec le short SHA du commit.
+page vient du dernier tag SemVer atteignable, par exemple le tag Git `0.2.0`
+affiché comme `v0.2.0`. La révision exacte du build est affichée séparément avec
+le short SHA du commit.
 
 ## Preview
 

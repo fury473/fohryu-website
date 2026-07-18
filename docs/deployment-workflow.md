@@ -73,6 +73,11 @@ branche par défaut :
 - hotfix : prochaine version patch ;
 - rupture ou changement majeur : prochaine version majeure.
 
+Les tags Git réels doivent être nommés au format `MAJOR.MINOR.PATCH` sans
+préfixe `v`, par exemple `0.2.0`. Le préfixe `v` est seulement une convention
+d'affichage ajoutée par le site au build : le tag Git `0.2.0` est donc affiché
+comme `v0.2.0`.
+
 Les changements purement éditoriaux restent versionnés par Git, mais ne doivent
 pas déclencher à eux seuls une nouvelle version SemVer.
 
@@ -90,8 +95,9 @@ Ce modèle permet de représenter correctement les cas courants :
   `v0.2.0` comme version logicielle et affiche une nouvelle révision ;
 - sur une branche de feature ou de preview, le site affiche la dernière version
   logicielle publiée et la révision exacte de la branche ;
-- après un tag SemVer posé sur `main`, le prochain build de ce commit affiche la
-  nouvelle version logicielle.
+- après un tag SemVer sans préfixe, par exemple `0.3.0`, posé sur `main`, le
+  prochain build de ce commit affiche la nouvelle version logicielle sous la
+  forme `v0.3.0`.
 
 Le build Cloudflare doit avoir accès aux tags Git pour calculer cette version. La
 commande `npm run build:cloudflare` synchronise donc les tags avant d'exécuter le
@@ -107,7 +113,7 @@ npm run build:cloudflare
 
 Synchronise les tags Git puis exécute `npm run build`. Cette commande est prévue
 pour Workers Builds afin que le calcul de version logicielle dispose des derniers
-tags SemVer.
+tags SemVer sans préfixe.
 
 ```bash
 npm run deploy:production
@@ -198,14 +204,14 @@ Limites et points de vigilance :
   protection Cloudflare Access n'est ajoutée ;
 - les réglages Workers Builds modifiés dans le dashboard s'appliquent aux builds
   suivants, pas nécessairement aux builds déjà lancés ;
-- le tag SemVer posé après un merge sur `main` peut arriver après le build
-  automatique déclenché par ce merge. Dans ce cas, la production peut afficher la
-  version logicielle précédente avec la nouvelle révision jusqu'au prochain build
-  du commit taggé ;
-- lorsqu'un tag SemVer doit devenir visible immédiatement après un merge, poser
-  le tag sur le commit de `main`, puis relancer un build production du même commit
-  ou lancer exceptionnellement `npm run deploy:production` depuis `main` après
-  synchronisation des tags ;
+- le tag SemVer sans préfixe posé après un merge sur `main` peut arriver après le
+  build automatique déclenché par ce merge. Dans ce cas, la production peut
+  afficher la version logicielle précédente avec la nouvelle révision jusqu'au
+  prochain build du commit taggé ;
+- lorsqu'un tag SemVer sans préfixe doit devenir visible immédiatement après un
+  merge, poser le tag sur le commit de `main`, puis relancer un build production
+  du même commit ou lancer exceptionnellement `npm run deploy:production` depuis
+  `main` après synchronisation des tags ;
 - un déploiement manuel de production depuis une branche reste possible pour un
   besoin spécifique, mais il doit rester exceptionnel et assumé.
 
