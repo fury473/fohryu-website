@@ -47,7 +47,7 @@ export const projects: Project[] = [
     shortDescription:
       "Le point de convergence de mes projets, expérimentations, contenus et futurs produits.",
     category: "Identité / atelier",
-    status: "active",
+    status: "usable",
     visibility: "public",
     links: [{ label: "fohryu.com", url: "https://fohryu.com/" }],
     featured: true,
@@ -88,6 +88,18 @@ export const projects: Project[] = [
     links: [],
     featured: true,
     sortOrder: 40
+  },
+  {
+    id: "personal-bug-watch",
+    title: "Suivi personnel de bugs",
+    shortDescription:
+      "Un carnet d'analyses pour répertorier des bugs sur différents produits, à commencer par des artefacts audio ChatGPT, avant transmission via les canaux officiels.",
+    category: "Qualité / signalement",
+    status: "planned",
+    visibility: "mixed",
+    links: [],
+    featured: false,
+    sortOrder: 45
   },
   {
     id: "ai-stream-cohost",

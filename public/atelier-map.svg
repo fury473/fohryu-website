@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 560" role="img" aria-labelledby="title desc">
   <title id="title">Carte des projets Fohryu Works</title>
-  <desc id="desc">Schema abstrait reliant atelier, hub, journal, explorations, stream et produits.</desc>
+  <desc id="desc">Schema abstrait reliant atelier, hub, journal, explorations, signalements, stream et produits.</desc>
   <rect width="780" height="560" fill="#120f0e"/>
   <g opacity=".28" stroke="#f6efea" stroke-width="1">
     <path d="M0 80h780M0 160h780M0 240h780M0 320h780M0 400h780M0 480h780"/>
@@ -10,6 +10,7 @@
     <path d="M167 277C224 166 296 150 390 232s164 84 224 14" stroke="#ff5a67" stroke-width="3"/>
     <path d="M178 352c82-68 156-70 222-6s126 67 202 8" stroke="#7fd4ff" stroke-width="2.4" opacity=".9"/>
     <path d="M229 180c74 33 111 83 111 151s35 105 105 112" stroke="#ffb36a" stroke-width="2.5"/>
+    <path d="M438 268c36-46 88-58 156-42" stroke="#d9f99d" stroke-width="2.2" opacity=".85"/>
   </g>
   <g font-family="Inter, ui-sans-serif, system-ui, sans-serif" letter-spacing="0">
     <g transform="translate(78 104)">
@@ -33,6 +34,12 @@
       <text x="18" y="36" fill="#ff5a67" font-size="13" font-weight="700">CREATION</text>
       <text x="18" y="64" fill="#f6efea" font-size="23" font-weight="720">Stream &amp; Pipeline</text>
       <text x="18" y="91" fill="#b9aaa3" font-size="15">récits, outils, produits</text>
+    </g>
+    <g transform="translate(506 190)">
+      <rect width="176" height="86" rx="8" fill="#171312" stroke="#ffffff" stroke-opacity=".14"/>
+      <text x="16" y="33" fill="#d9f99d" font-size="13" font-weight="700">SIGNALEMENTS</text>
+      <text x="16" y="60" fill="#f6efea" font-size="22" font-weight="720">Suivi bugs</text>
+      <circle cx="146" cy="28" r="6" fill="#d9f99d"/>
     </g>
     <g transform="translate(296 228)">
       <circle cx="92" cy="52" r="50" fill="#090706" stroke="#ff5a67" stroke-width="2"/>

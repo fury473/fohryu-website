@@ -51,16 +51,36 @@ export const nowStatusOrder: NowStatus[] = ["active", "next", "completed"];
 
 export const nowItems: NowItem[] = [
   {
-    id: "fohryu-com",
-    title: "Construction de fohryu.com",
-    description: "Une première porte d'entrée publique, statique et facile à faire évoluer.",
-    status: "active"
-  },
-  {
     id: "journal",
     title: "Journal quotidien assisté par IA",
     description: "Transformer les expériences et décisions du quotidien en mémoire structurée.",
     status: "active"
+  },
+  {
+    id: "fohryu-com-maintenance",
+    title: "Maintenance de fohryu.com",
+    description: "Maintenir la page publique, corriger les détails et faire évoluer les contenus.",
+    status: "next"
+  },
+  {
+    id: "personal-bug-watch",
+    title: "Suivi personnel de bugs",
+    description:
+      "Structurer un carnet d'analyses de bugs, avec une première entrée sur les artefacts audio ChatGPT pendant la lecture des messages.",
+    status: "next"
+  },
+  {
+    id: "moving-ai",
+    title: "Explorations en mouvement",
+    description: "Marcher, courir, observer et dialoguer avec une IA comme compagnon de route.",
+    status: "next"
+  },
+  {
+    id: "hub-structure",
+    title: "Structuration du Hub",
+    description:
+      "Consolider un espace privé où je documente mes idées de manière détaillée. Une version publique viendra en cours de route, le temps de stabiliser mes priorités.",
+    status: "next"
   },
   {
     id: "youtube-refresh",
@@ -70,23 +90,17 @@ export const nowItems: NowItem[] = [
     status: "next"
   },
   {
-    id: "moving-ai",
-    title: "Explorations en mouvement",
-    description: "Marcher, courir, observer et dialoguer avec une IA comme compagnon de route.",
-    status: "active"
-  },
-  {
     id: "stream-cohost",
     title: "AI co-host pour le streaming",
     description: "Préparer une présence IA capable d'accompagner le direct et son audience.",
     status: "next"
   },
   {
-    id: "hub-structure",
-    title: "Structuration du Hub",
+    id: "fohryu-com-launch",
+    title: "Lancement de fohryu.com",
     description:
-      "Consolider un espace privé où je documente mes idées de manière détaillée. Une version publique viendra en cours de route, le temps de stabiliser mes priorités.",
-    status: "next"
+      "La première porte d'entrée publique est en ligne : statique, sobre et facile à faire évoluer.",
+    status: "completed"
   }
 ];
 
