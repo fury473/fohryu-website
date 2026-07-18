@@ -65,6 +65,22 @@ Use it for homepage content, rendering, styling, asset, accessibility or
 documentation maintenance. If repo-local skills are not auto-discovered, read its
 `SKILL.md` manually before making those changes.
 
+## Change Workflow
+
+Use `docs/deployment-workflow.md` as the source of truth for contribution
+workflow, SemVer tagging and Cloudflare deployment policy.
+
+Before editing, classify the request as either:
+
+- a software or infrastructure increment, which requires a dedicated branch from
+  the latest default-branch commit and a pull request for manual user review;
+- a pure editorial update, which may be committed directly on `main` unless the
+  user asks for a branch or PR.
+
+Do not merge pull requests locally or remotely unless the user explicitly asks
+for it. Do not add a root `package.json` version; public software versioning is
+derived from Git tags as documented in `docs/deployment-workflow.md`.
+
 ## Validation And Git
 
 Before committing code or visual changes, run:
@@ -79,5 +95,5 @@ For documentation-only changes, `git diff --check` is usually enough.
 Commit from this repository, not from the parent `hub` repository. Stage only
 files that belong to this project, and do not stage unrelated user changes.
 
-Do not deploy, push, force-push or rewrite history unless the user explicitly
-asks for it.
+Do not deploy to Cloudflare, push, force-push or rewrite history unless the user
+explicitly asks for it.

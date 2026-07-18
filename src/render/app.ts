@@ -89,7 +89,8 @@ function renderHeader(): HTMLElement {
 }
 
 function renderHero(): HTMLElement {
-  const versionLabel = buildMetadata.appVersion;
+  const revisionLabel = buildMetadata.revision;
+  const softwareVersionLabel = buildMetadata.softwareVersion;
 
   return el("section", {
     className: "hero section",
@@ -101,7 +102,7 @@ function renderHero(): HTMLElement {
           el("div", {
             className: "hero__content reveal",
             children: [
-              el("p", { className: "eyebrow", text: `Atelier public / ${versionLabel}` }),
+              el("p", { className: "eyebrow", text: `Atelier public / ${softwareVersionLabel}` }),
               el("h1", { text: "Construire, expérimenter, documenter." }),
               el("p", {
                 className: "hero__intro",
@@ -169,7 +170,7 @@ function renderHero(): HTMLElement {
                   el("span", { text: "Une carte de travail, pas un plan figé." }),
                   el("span", {
                     className: "hero-map__caption-code",
-                    text: `signal / ${versionLabel}`
+                    text: `révision / ${revisionLabel}`
                   })
                 ]
               })
@@ -546,6 +547,22 @@ function renderFooter(): HTMLElement {
 
 function renderBuildMetadata(): HTMLElement {
   const formattedDate = formatCommitDate(buildMetadata.lastCommitDate);
+  const revision =
+    buildMetadata.revisionUrl !== null
+      ? el("a", {
+          className: "footer-build__link",
+          text: buildMetadata.revision,
+          attrs: {
+            href: buildMetadata.revisionUrl,
+            target: "_blank",
+            rel: "noreferrer",
+            "aria-label": `Voir le commit ${buildMetadata.revision}`
+          }
+        })
+      : el("span", {
+          className: "footer-build__revision-fallback",
+          text: buildMetadata.revision
+        });
 
   return el("p", {
     className: `footer-build${formattedDate ? "" : " footer-build--fallback"}`,
@@ -577,7 +594,9 @@ function renderBuildMetadata(): HTMLElement {
               "aria-label":
                 "Voir l'historique public des commits, date de dernière modification indisponible"
             }
-          })
+          }),
+      " · Révision : ",
+      revision
     ]
   });
 }

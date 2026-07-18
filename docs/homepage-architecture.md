@@ -28,11 +28,11 @@ lien d'évitement, le conteneur `#app`, le fallback `noscript` et charge
 `renderApp(root)`.
 
 `vite.config.ts` calcule au build les métadonnées publiques injectées dans le
-bundle : version affichée, URL d'historique des commits et date ISO du dernier
-commit. La version vient du tag SemVer exact du commit courant, affiché avec un
-préfixe `v`, ou du short SHA lorsque le commit n'est pas taggé. Si Git ou `.git`
-n'est pas disponible dans l'environnement de build, la date injectée vaut `null`
-et la version vaut `dev`.
+bundle : version logicielle affichée, révision exacte, URL d'historique des
+commits et date ISO du dernier commit. Ces valeurs sont exposées par
+`src/data/build.ts` et restent indépendantes d'un backend. Le détail de la
+politique version/révision, des tags SemVer et du déploiement Cloudflare vit dans
+`docs/deployment-workflow.md`.
 
 La même configuration active le polling uniquement pour le serveur de
 développement Vite afin de détecter les modifications faites depuis Windows sur le
@@ -62,9 +62,8 @@ Les données éditoriales sont séparées du rendu.
 - `principles` : principes éditoriaux et techniques ;
 - `spaces` : points d'accès publics, prévus ou protégés.
 
-`src/data/build.ts` expose les métadonnées statiques injectées par Vite. Elles ne
-dépendent d'aucun backend et servent à afficher la version de l'application ainsi
-que la date du dernier commit Git lorsqu'elle est connue.
+`src/data/build.ts` expose les métadonnées statiques décrites dans le pipeline de
+rendu.
 
 `src/data/projects.ts` contient :
 
@@ -122,8 +121,10 @@ Le hero pose l'identité : atelier public, phrase principale, introduction, appe
 
 L'objectif est de donner une première impression plus incarnée sans faire basculer
 la palette générale vers le rose de l'asset Ryūko.
-La version affichée dans l'eyebrow et la légende technique du hero vient de
-`buildMetadata.appVersion`, pas d'une chaîne éditoriale dupliquée.
+La version logicielle affichée dans l'eyebrow du hero vient de
+`buildMetadata.softwareVersion`, et la légende technique du hero affiche
+`buildMetadata.revision`. Ces valeurs ne doivent pas être dupliquées dans une
+chaîne éditoriale.
 
 ### Récemment
 

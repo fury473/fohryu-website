@@ -1,14 +1,17 @@
 {
   "name": "fohryu-website",
-  "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "node ./node_modules/vite/bin/vite.js --host 0.0.0.0",
     "build": "node ./node_modules/typescript/bin/tsc --noEmit && node ./node_modules/vite/bin/vite.js build",
+    "build:cloudflare": "git fetch --tags && npm run build",
     "preview": "node ./node_modules/vite/bin/vite.js preview --host 0.0.0.0",
     "typecheck": "node ./node_modules/typescript/bin/tsc --noEmit",
-    "deploy": "npm run build && node ./node_modules/wrangler/bin/wrangler.js deploy"
+    "cf:deploy:production": "node ./node_modules/wrangler/bin/wrangler.js deploy",
+    "cf:deploy:preview": "node ./node_modules/wrangler/bin/wrangler.js versions upload",
+    "deploy:production": "npm run build:cloudflare && npm run cf:deploy:production",
+    "deploy:preview": "npm run build:cloudflare && npm run cf:deploy:preview"
   },
   "devDependencies": {
     "typescript": "^5.8.3",

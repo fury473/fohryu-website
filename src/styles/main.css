@@ -1122,7 +1122,8 @@ p {
   color: #d8ccc6;
 }
 
-.footer-build__date {
+.footer-build__date,
+.footer-build__link {
   color: var(--signal);
   font-weight: 700;
   text-decoration-color: rgba(127, 212, 255, 0.34);
@@ -1131,7 +1132,8 @@ p {
   text-underline-offset: 0.18em;
 }
 
-.footer-build__date:hover {
+.footer-build__date:hover,
+.footer-build__link:hover {
   color: var(--accent-2);
   text-decoration-color: rgba(255, 179, 106, 0.46);
 }
