@@ -100,8 +100,11 @@ Ce modèle permet de représenter correctement les cas courants :
   prochain build de ce commit affiche la nouvelle version logicielle sous la
   forme `v0.3.0`.
 
-Le build Cloudflare doit avoir accès aux tags Git pour calculer cette version. La
-commande `npm run build:cloudflare` synchronise donc les tags avant d'exécuter le
+Le build Cloudflare doit avoir accès aux tags Git et à l'historique nécessaire
+pour calculer cette version. Workers Builds peut cloner le dépôt avec un
+historique réduit : dans ce cas, les refs de tags seules ne suffisent pas à
+résoudre le dernier tag atteignable depuis un commit éditorial non taggé. La
+commande `npm run build:cloudflare` prépare donc le dépôt Git avant d'exécuter le
 build Vite.
 
 ## Scripts de déploiement
@@ -112,9 +115,10 @@ Les scripts distinguent explicitement la production et la preview :
 npm run build:cloudflare
 ```
 
-Synchronise les tags Git puis exécute `npm run build`. Cette commande est prévue
-pour Workers Builds afin que le calcul de version logicielle dispose des derniers
-tags SemVer sans préfixe.
+Exécute `scripts/prepare-cloudflare-git.mjs` puis `npm run build`. Cette commande
+est prévue pour Workers Builds afin que le calcul de version logicielle dispose
+des derniers tags SemVer sans préfixe et d'un historique Git suffisant pour
+résoudre le dernier tag atteignable.
 
 ```bash
 npm run deploy:production
@@ -315,3 +319,25 @@ Retour arrière :
   de branches non-production ou déconnecter Workers Builds si nécessaire, puis
   utiliser `wrangler rollback` ou le dashboard Cloudflare pour revenir à une
   version de production antérieure.
+
+### 2026-07-19 - Déploiement automatique après commit éditorial
+
+- Auteur : Workers Builds déclenché automatiquement par un push direct sur
+  `main`.
+- Ressources concernées : Worker `fohryu-website`, commit Git
+  `1b89e296fc8f91b42de1f3c34951191f03041125`, Workers Builds.
+- État avant : le premier déploiement production manuel via Deploy Hook servait
+  `softwareVersion: "v0.3.0"` et `revision: "8d1efba"`.
+- Changements effectués : le commit éditorial `Document Cloudflare rollout` a été
+  poussé directement sur `main`, ce qui a déclenché automatiquement Workers
+  Builds. Le build `e86250ae-9904-43f5-8046-1b1d3418dc38` a été annulé après être
+  resté bloqué en initialisation pendant l'incident Cloudflare ; le retry
+  `31f78b44-e812-4c2b-9199-5b024b34c549` a terminé avec succès et déployé la
+  version Cloudflare `f8083adb-9295-44f3-89d4-4e5187bc6d8f`.
+- Constat : le déploiement automatique a servi `revision: "1b89e29"` mais
+  `softwareVersion: "dev"`. Les logs montraient pourtant que les tags Git avaient
+  été récupérés. Le diagnostic retenu est un clone Workers Builds à historique
+  réduit : les refs de tags étaient présentes, mais `git describe` ne pouvait pas
+  remonter du commit éditorial non taggé jusqu'au tag `0.3.0`.
+- Correction prévue : faire approfondir l'historique Git par
+  `npm run build:cloudflare` avant le build Vite.
