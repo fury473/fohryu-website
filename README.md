@@ -30,6 +30,10 @@ Le serveur Vite expose le site en local. Les contenus principaux sont dans :
 - `src/render/` pour le rendu DOM ;
 - `src/styles/` pour l'identité visuelle.
 
+Le watcher du serveur de développement utilise un polling raisonnable afin de
+détecter les modifications faites depuis Windows/VS Code sur le dépôt monté sous
+WSL. Cette configuration ne concerne pas le build de production.
+
 Pour comprendre la composition de la page, voir
 [`docs/homepage-architecture.md`](docs/homepage-architecture.md). Pour les
 consignes destinées aux agents de maintenance, voir [`AGENTS.md`](AGENTS.md).
@@ -40,7 +44,12 @@ consignes destinées aux agents de maintenance, voir [`AGENTS.md`](AGENTS.md).
 npm run build
 ```
 
-La sortie statique est produite dans `dist/`.
+La sortie statique est produite dans `dist/`. Pendant le build, Vite tente de lire
+la date du dernier commit Git pour afficher la mention `Dernière modification`
+dans le footer. Si les métadonnées Git ne sont pas disponibles, le site reste
+buildable et affiche un fallback explicite. La version affichée sur la page vient
+du tag SemVer exact du commit courant, par exemple `0.2.0`, ou du short SHA si le
+commit n'est pas taggé.
 
 ## Preview
 

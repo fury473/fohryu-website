@@ -27,6 +27,17 @@ lien d'évitement, le conteneur `#app`, le fallback `noscript` et charge
 `src/main.ts` ajoute la classe `js` au document, récupère `#app`, puis appelle
 `renderApp(root)`.
 
+`vite.config.ts` calcule au build les métadonnées publiques injectées dans le
+bundle : version affichée, URL d'historique des commits et date ISO du dernier
+commit. La version vient du tag SemVer exact du commit courant, affiché avec un
+préfixe `v`, ou du short SHA lorsque le commit n'est pas taggé. Si Git ou `.git`
+n'est pas disponible dans l'environnement de build, la date injectée vaut `null`
+et la version vaut `dev`.
+
+La même configuration active le polling uniquement pour le serveur de
+développement Vite afin de détecter les modifications faites depuis Windows sur le
+dépôt monté sous WSL, sans modifier le comportement du build de production.
+
 `src/render/app.ts` construit l'intégralité de la page en TypeScript avec des
 fonctions de rendu. Le DOM initial est remplacé via `root.replaceChildren(...)`.
 La modale de l'easter egg est ajoutée au même niveau que le contenu principal afin
@@ -45,11 +56,15 @@ Les données éditoriales sont séparées du rendu.
 `src/data/site.ts` contient :
 
 - `navLinks` : liens affichés dans la navigation principale ;
-- `nowItems` : état des chantiers en cours ;
+- `nowItems` : sujets de travail actifs, à suivre ou terminés ;
 - `activityItems` : flux d'activité récent, conçu pour accueillir Instagram,
   Journal, YouTube ou GitHub ;
 - `principles` : principes éditoriaux et techniques ;
 - `spaces` : points d'accès publics, prévus ou protégés.
+
+`src/data/build.ts` expose les métadonnées statiques injectées par Vite. Elles ne
+dépendent d'aucun backend et servent à afficher la version de l'application ainsi
+que la date du dernier commit Git lorsqu'elle est connue.
 
 `src/data/projects.ts` contient :
 
@@ -107,6 +122,8 @@ Le hero pose l'identité : atelier public, phrase principale, introduction, appe
 
 L'objectif est de donner une première impression plus incarnée sans faire basculer
 la palette générale vers le rose de l'asset Ryūko.
+La version affichée dans l'eyebrow et la légende technique du hero vient de
+`buildMetadata.appVersion`, pas d'une chaîne éditoriale dupliquée.
 
 ### Récemment
 
@@ -121,7 +138,16 @@ Instagram, entrées Journal, vidéos YouTube, commits ou sorties GitHub.
 
 La section `Maintenant` répond à la question : qu'est-ce qui est en cours ? Elle
 affiche les entrées de `nowItems` dans un panneau unique afin de rester synthétique
-et plus temporelle que la cartographie des projets.
+et plus temporelle que la cartographie des projets. Chaque entrée représente un
+sujet de travail et porte un `status` maintenu dans `src/data/site.ts` :
+`active`, `next` ou `completed`. Le rendu génère automatiquement le libellé et
+la classe visuelle associée ; ajouter ou déplacer un sujet ne demande donc pas de
+modifier `src/render/` ou `src/styles/`. La couleur de chaque bloc reflète son
+statut complet. Les sujets actifs utilisent l'état le plus visible, avec une
+bordure extérieure animée lorsque les préférences de mouvement le permettent ; les
+sujets à suivre et terminés gardent des couleurs distinctes plus discrètes. Une
+légende générée depuis `nowStatusOrder` rend les trois états visibles même si aucun
+sujet actuel n'utilise encore l'un d'eux.
 
 ### Projets
 
@@ -163,7 +189,11 @@ marqués comme prévus plutôt que présentés comme accessibles.
 
 Le footer reprend la marque, la mention de site expérimental et quelques liens
 externes. Le watermark Ryūko y sert de signature visuelle plus visible que dans le
-hero, tout en restant secondaire par rapport au contenu.
+hero, tout en restant secondaire par rapport au contenu. Il affiche aussi une
+mention `Dernière modification` calculée depuis le dernier commit Git disponible
+au build. La date et l'heure sont directement liées à l'historique public des
+commits. Si les métadonnées Git ne sont pas disponibles, le footer garde un
+fallback explicite lié au même historique.
 
 ## Easter egg Fury
 
@@ -204,6 +234,7 @@ Les principaux choix d'accessibilité sont :
 - textes injectés via `textContent`, pas via HTML brut ;
 - liens externes ouverts avec `target="_blank"` et `rel="noreferrer"` ;
 - états de focus visibles ;
+- animation de bordure de l'état actif limitée par `prefers-reduced-motion` ;
 - modale avec `role="dialog"`, `aria-modal`, titre et description associés ;
 - texte complet de l'easter egg disponible en `.sr-only`, sans dupliquer la
   lecture de l'image ;
@@ -230,7 +261,7 @@ Les tokens CSS sont déclarés dans `:root` :
 - bordures : `--line`, `--line-strong`, `--line-warm` ;
 - texte : `--text`, `--muted`, `--soft` ;
 - accents : `--accent`, `--accent-2`, `--signal` ;
-- états : `--usable`, `--planned` ;
+- états : `--usable`, `--planned`, `--next`, `--completed` ;
 - dimensions partagées : `--radius`, `--max-width`, `--shadow`.
 
 Le fond de page combine une grille très légère et des halos chauds. Les sections
@@ -262,6 +293,13 @@ Pour ajouter une activité récente :
 2. Choisir une source parmi les valeurs prévues par `ActivityItem`.
 3. Renseigner une date machine `datetime` et une date lisible `dateLabel`.
 4. Garder l'extrait court pour que la carte reste scannable.
+
+Pour ajouter ou modifier un sujet `Maintenant` :
+
+1. Mettre à jour une entrée dans `nowItems`.
+2. Utiliser un `id` stable, exposé comme ancre `#now-{id}`.
+3. Choisir `status` parmi `active`, `next` ou `completed`.
+4. Garder la description courte pour conserver le rôle de synthèse de la section.
 
 Pour ajouter un projet :
 

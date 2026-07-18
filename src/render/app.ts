@@ -5,10 +5,13 @@ import {
   visibilityLabels,
   type Project
 } from "../data/projects";
+import { buildMetadata } from "../data/build";
 import {
   activityItems,
   navLinks,
   nowItems,
+  nowStatusLabels,
+  nowStatusOrder,
   principles,
   spaces,
   type ActivityItem,
@@ -86,6 +89,8 @@ function renderHeader(): HTMLElement {
 }
 
 function renderHero(): HTMLElement {
+  const versionLabel = buildMetadata.appVersion;
+
   return el("section", {
     className: "hero section",
     attrs: { id: "top" },
@@ -96,7 +101,7 @@ function renderHero(): HTMLElement {
           el("div", {
             className: "hero__content reveal",
             children: [
-              el("p", { className: "eyebrow", text: "Atelier public / v0.1" }),
+              el("p", { className: "eyebrow", text: `Atelier public / ${versionLabel}` }),
               el("h1", { text: "Construire, expérimenter, documenter." }),
               el("p", {
                 className: "hero__intro",
@@ -162,7 +167,10 @@ function renderHero(): HTMLElement {
               el("figcaption", {
                 children: [
                   el("span", { text: "Une carte de travail, pas un plan figé." }),
-                  el("span", { className: "hero-map__caption-code", text: "signal / v0.1" })
+                  el("span", {
+                    className: "hero-map__caption-code",
+                    text: `signal / ${versionLabel}`
+                  })
                 ]
               })
             ]
@@ -182,9 +190,23 @@ function renderNow(): HTMLElement {
           className: "now-panel__lead",
           children: [
             el("span", { className: "signal-dot", attrs: { "aria-hidden": "true" } }),
-            el("p", {
-              text:
-                "La réponse courte à la question : qu'est-ce que Fury construit actuellement ?"
+            el("div", {
+              className: "now-panel__lead-copy",
+              children: [
+                el("p", {
+                  text:
+                    "La réponse courte à la question : qu'est-ce que Fury construit actuellement ?"
+                }),
+                el("ul", {
+                  className: "now-status-legend",
+                  attrs: { "aria-label": "États des sujets de travail" },
+                  children: nowStatusOrder.map((status) =>
+                    el("li", {
+                      children: [renderNowStatus(status)]
+                    })
+                  )
+                })
+              ]
             })
           ]
         }),
@@ -192,7 +214,13 @@ function renderNow(): HTMLElement {
           className: "now-list",
           children: nowItems.map((item) =>
             el("li", {
+              className: `now-item now-item--${item.status}`,
+              attrs: { id: `now-${item.id}` },
               children: [
+                el("span", {
+                  className: "sr-only",
+                  text: `Statut : ${nowStatusLabels[item.status]}`
+                }),
                 el("h3", { text: item.title }),
                 el("p", { text: item.description })
               ]
@@ -202,6 +230,19 @@ function renderNow(): HTMLElement {
       ]
     })
   ]);
+}
+
+function renderNowStatus(status: keyof typeof nowStatusLabels): HTMLElement {
+  return el("span", {
+    className: `now-status now-status--${status}`,
+    children: [
+      el("span", {
+        className: "now-status__mark",
+        attrs: { "aria-hidden": "true" }
+      }),
+      nowStatusLabels[status]
+    ]
+  });
 }
 
 function renderActivity(): HTMLElement {
@@ -482,7 +523,8 @@ function renderFooter(): HTMLElement {
                   el("strong", { text: "Fohryu Works" }),
                   el("p", {
                     text: `© ${year}. Site expérimental, statique, et volontairement en évolution.`
-                  })
+                  }),
+                  renderBuildMetadata()
                 ]
               })
             ]
@@ -500,6 +542,66 @@ function renderFooter(): HTMLElement {
       })
     ]
   });
+}
+
+function renderBuildMetadata(): HTMLElement {
+  const formattedDate = formatCommitDate(buildMetadata.lastCommitDate);
+
+  return el("p", {
+    className: `footer-build${formattedDate ? "" : " footer-build--fallback"}`,
+    children: [
+      "Dernière modification : ",
+      formattedDate && buildMetadata.lastCommitDate
+        ? el("a", {
+            className: "footer-build__date",
+            attrs: {
+              href: buildMetadata.commitsUrl,
+              target: "_blank",
+              rel: "noreferrer",
+              "aria-label": `Voir l'historique public des commits, dernière modification ${formattedDate}`
+            },
+            children: [
+              el("time", {
+                text: formattedDate,
+                attrs: { datetime: buildMetadata.lastCommitDate }
+              })
+            ]
+          })
+        : el("a", {
+            className: "footer-build__date footer-build__date--fallback",
+            text: "date indisponible",
+            attrs: {
+              href: buildMetadata.commitsUrl,
+              target: "_blank",
+              rel: "noreferrer",
+              "aria-label":
+                "Voir l'historique public des commits, date de dernière modification indisponible"
+            }
+          })
+    ]
+  });
+}
+
+function formatCommitDate(dateIso: string | null): string | null {
+  if (!dateIso) {
+    return null;
+  }
+
+  const date = new Date(dateIso);
+
+  if (Number.isNaN(date.getTime())) {
+    return null;
+  }
+
+  return new Intl.DateTimeFormat("fr-FR", {
+    day: "numeric",
+    hour: "2-digit",
+    hourCycle: "h23",
+    minute: "2-digit",
+    month: "long",
+    timeZone: "Europe/Paris",
+    year: "numeric"
+  }).format(date);
 }
 
 function renderFuryOriginModal(): HTMLElement {
