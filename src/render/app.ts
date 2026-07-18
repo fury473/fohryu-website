@@ -303,7 +303,11 @@ function renderActivityCard(item: ActivityItem): HTMLElement {
             className: "activity-card__copy",
             children: item.body.map((paragraph) => el("p", { text: paragraph }))
           }),
-          link("Ouvrir la publication", item.url, "button button--secondary activity-card__button")
+          link(
+            item.ctaLabel ?? "Ouvrir la publication",
+            item.url,
+            "button button--secondary activity-card__button"
+          )
         ]
       })
     ]
