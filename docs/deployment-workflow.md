@@ -284,14 +284,34 @@ Retour arrière :
 
 ## Journal des modifications hors dépôt
 
-Aucune modification hors dépôt n'a été effectuée pour cette PR.
+### 2026-07-19 - Activation Workers Builds et premier déploiement `0.3.0`
 
-Lorsqu'une modification Cloudflare est autorisée et réalisée, documenter ici :
-
-- date et auteur de l'opération ;
-- ressource concernée ;
-- état avant ;
-- changement effectué ;
-- état après ;
-- commande ou écran utilisé ;
-- méthode de retour arrière.
+- Auteur : Fury via le dashboard Cloudflare ; vérification par Codex via le MCP
+  Cloudflare Workers Builds et une requête publique sur `fohryu.com`.
+- Ressources concernées : Worker `fohryu-website`
+  (`e8351f8ab1c145829d4c8341ee1dc578`), dépôt GitHub
+  `fury473/fohryu-website`, Custom Domain `fohryu.com`, Workers Builds, Deploy
+  Hook production.
+- État avant : la PR #2 était mergée dans `main`, le tag Git `0.3.0` était posé
+  sur le merge commit `8d1efba`, mais Workers Builds n'avait encore aucun build
+  enregistré pour `fohryu-website`.
+- Changements effectués : connexion du dépôt GitHub à Workers Builds,
+  configuration de `main` comme branche de production, activation des builds de
+  branches non-production, remplacement du token de build hors scope par un token
+  dédié à `fohryu-website`, création d'un Deploy Hook production sur `main`, puis
+  déclenchement manuel de ce hook. L'URL du Deploy Hook n'est pas stockée dans le
+  dépôt, car elle permet de déclencher des builds.
+- Configuration observée : build command `npm run build:cloudflare`, deploy
+  command `npm run cf:deploy:production`, preview/non-production command
+  `npm run cf:deploy:preview`, root directory `/`.
+- Résultat : build Workers Builds
+  `28940b0e-ad76-431e-9058-aebf94de8b81` terminé avec succès ; `git fetch
+  --tags` a récupéré les tags `0.1.0`, `0.2.0` et `0.3.0` ; Wrangler a déployé
+  le Worker sur `fohryu.com` avec la version Cloudflare
+  `e52ce593-cab7-4ed2-863a-5eb05fcf848a`.
+- Vérification publique : `fohryu.com` sert le bundle déployé avec
+  `softwareVersion: "v0.3.0"` et `revision: "8d1efba"`.
+- Retour arrière : désactiver ou supprimer le Deploy Hook, désactiver les builds
+  de branches non-production ou déconnecter Workers Builds si nécessaire, puis
+  utiliser `wrangler rollback` ou le dashboard Cloudflare pour revenir à une
+  version de production antérieure.
