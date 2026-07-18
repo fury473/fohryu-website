@@ -34,11 +34,18 @@ préfixe `v`, ou du short SHA lorsque le commit n'est pas taggé. Si Git ou `.gi
 n'est pas disponible dans l'environnement de build, la date injectée vaut `null`
 et la version vaut `dev`.
 
-Les tags SemVer sont posés sur la branche par défaut après merge. Une branche de
-feature prépare l'incrément mineur suivant, une branche de hotfix prépare
-l'incrément patch suivant, et une évolution de rupture prépare l'incrément majeur
-suivant. Tant que la branche n'est pas taggée, l'affichage public de version reste
-basé sur le short SHA du commit buildé.
+Les tags SemVer sont posés sur la branche par défaut pour les incréments
+logiciels. Une branche de feature prépare l'incrément mineur suivant, une branche
+de hotfix prépare l'incrément patch suivant, et une évolution de rupture prépare
+l'incrément majeur suivant. Les modifications purement éditoriales restent
+versionnées par Git mais ne déclenchent pas à elles seules une nouvelle version
+SemVer. Tant que le commit buildé n'est pas taggé, l'affichage public de version
+reste basé sur le short SHA.
+
+Le déploiement de production et les previews de branche restent séparés : la
+production publie une version active du Worker sur `fohryu.com`, tandis que les
+previews utilisent des versions Workers non promues exposées par Preview URLs. Le
+détail opérationnel vit dans `docs/deployment-workflow.md`.
 
 La même configuration active le polling uniquement pour le serveur de
 développement Vite afin de détecter les modifications faites depuis Windows sur le

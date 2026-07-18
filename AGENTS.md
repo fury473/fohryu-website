@@ -65,25 +65,38 @@ Use it for homepage content, rendering, styling, asset, accessibility or
 documentation maintenance. If repo-local skills are not auto-discovered, read its
 `SKILL.md` manually before making those changes.
 
-## Validation And Git
+## Change Workflow
 
-Start every new feature, hotfix, documentation increment or similar change from
-the latest commit of the default branch. Fetch the remote, fast-forward the local
-default branch when needed, then create a dedicated branch from that commit before
-editing files.
+Classify each request before editing:
+
+- Software or infrastructure increments include features, hotfixes, architecture
+  changes, rendering/component changes, styling systems, data model changes,
+  scripts, build configuration, deployment configuration and process changes.
+- Pure editorial updates include text corrections, link updates, content data
+  changes and status changes in existing sections such as `Maintenant`, as long
+  as they do not require rendering, CSS, model, build or infrastructure changes.
+
+For software or infrastructure increments, start from the latest commit of the
+default branch. Fetch the remote, fast-forward the local default branch when
+needed, then create a dedicated branch from that commit before editing files.
 
 Use an intent-based branch prefix such as `feature/`, `hotfix/` or `docs/`. Keep
-related work as one or more successive commits on that branch. Do not work
-directly on the default branch unless the user explicitly asks for it.
+related work as one or more successive commits on that branch. Open a pull
+request for manual user review and merge. Do not merge pull requests locally or
+remotely unless the user explicitly asks for it.
 
-Every new increment should end with a pull request unless the user explicitly
-overrides that workflow. The user handles review and merge. Do not merge pull
-requests locally or remotely unless the user explicitly asks for it.
+Pure editorial updates may be committed directly on `main` without a branch or
+pull request, unless the user explicitly asks for a branch/PR. They remain
+versioned by Git, but they are not software increments and must not by themselves
+trigger a new SemVer version.
 
-The application uses SemVer tags on the default branch. During feature work,
-plan the next minor version; during hotfix work, plan the next patch version; for
-breaking or major shifts, plan the next major version. If the current commit has
-no exact SemVer tag, the app falls back to displaying the short commit ref.
+The application uses SemVer tags on the default branch for software releases.
+During feature work, plan the next minor version; during hotfix work, plan the
+next patch version; for breaking or major shifts, plan the next major version. If
+the current commit has no exact SemVer tag, the app falls back to displaying the
+short commit ref.
+
+## Validation And Git
 
 Before committing code or visual changes, run:
 
@@ -97,5 +110,5 @@ For documentation-only changes, `git diff --check` is usually enough.
 Commit from this repository, not from the parent `hub` repository. Stage only
 files that belong to this project, and do not stage unrelated user changes.
 
-Do not deploy, push, force-push or rewrite history unless the user explicitly
-asks for it.
+Do not deploy to Cloudflare, push, force-push or rewrite history unless the user
+explicitly asks for it.
