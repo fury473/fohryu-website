@@ -32,6 +32,10 @@ bundle : URL d'historique des commits et date ISO du dernier commit. Si Git ou
 `.git` n'est pas disponible dans l'environnement de build, la date injectée vaut
 `null` et le rendu affiche un fallback explicite.
 
+La même configuration active le polling uniquement pour le serveur de
+développement Vite afin de détecter les modifications faites depuis Windows sur le
+dépôt monté sous WSL, sans modifier le comportement du build de production.
+
 `src/render/app.ts` construit l'intégralité de la page en TypeScript avec des
 fonctions de rendu. Le DOM initial est remplacé via `root.replaceChildren(...)`.
 La modale de l'easter egg est ajoutée au même niveau que le contenu principal afin
@@ -50,7 +54,7 @@ Les données éditoriales sont séparées du rendu.
 `src/data/site.ts` contient :
 
 - `navLinks` : liens affichés dans la navigation principale ;
-- `nowItems` : sujets de travail en cours, en pause ou terminés ;
+- `nowItems` : sujets de travail actifs, à suivre ou terminés ;
 - `activityItems` : flux d'activité récent, conçu pour accueillir Instagram,
   Journal, YouTube ou GitHub ;
 - `principles` : principes éditoriaux et techniques ;
@@ -132,13 +136,14 @@ La section `Maintenant` répond à la question : qu'est-ce qui est en cours ? El
 affiche les entrées de `nowItems` dans un panneau unique afin de rester synthétique
 et plus temporelle que la cartographie des projets. Chaque entrée représente un
 sujet de travail et porte un `status` maintenu dans `src/data/site.ts` :
-`active`, `paused` ou `completed`. Le rendu génère automatiquement le libellé et
+`active`, `next` ou `completed`. Le rendu génère automatiquement le libellé et
 la classe visuelle associée ; ajouter ou déplacer un sujet ne demande donc pas de
-modifier `src/render/` ou `src/styles/`. Les sujets actifs utilisent l'état le
-plus visible, avec une bordure animée lorsque les préférences de mouvement le
-permettent ; les sujets en pause et terminés gardent des couleurs distinctes plus
-discrètes. Une légende générée depuis `nowStatusOrder` rend les trois états
-visibles même si aucun sujet actuel n'utilise encore l'un d'eux.
+modifier `src/render/` ou `src/styles/`. La couleur de chaque bloc reflète son
+statut complet. Les sujets actifs utilisent l'état le plus visible, avec une
+bordure extérieure animée lorsque les préférences de mouvement le permettent ; les
+sujets à suivre et terminés gardent des couleurs distinctes plus discrètes. Une
+légende générée depuis `nowStatusOrder` rend les trois états visibles même si aucun
+sujet actuel n'utilise encore l'un d'eux.
 
 ### Projets
 
@@ -252,7 +257,7 @@ Les tokens CSS sont déclarés dans `:root` :
 - bordures : `--line`, `--line-strong`, `--line-warm` ;
 - texte : `--text`, `--muted`, `--soft` ;
 - accents : `--accent`, `--accent-2`, `--signal` ;
-- états : `--usable`, `--planned`, `--paused`, `--completed` ;
+- états : `--usable`, `--planned`, `--next`, `--completed` ;
 - dimensions partagées : `--radius`, `--max-width`, `--shadow`.
 
 Le fond de page combine une grille très légère et des halos chauds. Les sections
@@ -289,7 +294,7 @@ Pour ajouter ou modifier un sujet `Maintenant` :
 
 1. Mettre à jour une entrée dans `nowItems`.
 2. Utiliser un `id` stable, exposé comme ancre `#now-{id}`.
-3. Choisir `status` parmi `active`, `paused` ou `completed`.
+3. Choisir `status` parmi `active`, `next` ou `completed`.
 4. Garder la description courte pour conserver le rôle de synthèse de la section.
 
 Pour ajouter un projet :

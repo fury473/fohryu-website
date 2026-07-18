@@ -1,4 +1,4 @@
-export type NowStatus = "active" | "paused" | "completed";
+export type NowStatus = "active" | "next" | "completed";
 
 export type NowItem = {
   id: string;
@@ -43,11 +43,11 @@ export const navLinks = [
 
 export const nowStatusLabels: Record<NowStatus, string> = {
   active: "Actif",
-  paused: "En pause",
+  next: "À suivre",
   completed: "Terminé"
 };
 
-export const nowStatusOrder: NowStatus[] = ["active", "paused", "completed"];
+export const nowStatusOrder: NowStatus[] = ["active", "next", "completed"];
 
 export const nowItems: NowItem[] = [
   {
@@ -67,7 +67,7 @@ export const nowItems: NowItem[] = [
     title: "Mise à jour de la chaîne YouTube",
     description:
       "Faire le ménage, clarifier le branding, retravailler la description, préparer l'intro et poser les premières vidéos de contenu.",
-    status: "paused"
+    status: "next"
   },
   {
     id: "moving-ai",
@@ -79,14 +79,14 @@ export const nowItems: NowItem[] = [
     id: "stream-cohost",
     title: "AI co-host pour le streaming",
     description: "Préparer une présence IA capable d'accompagner le direct et son audience.",
-    status: "paused"
+    status: "next"
   },
   {
     id: "hub-structure",
     title: "Structuration du Hub",
     description:
       "Consolider un espace privé où je documente mes idées de manière détaillée. Une version publique viendra en cours de route, le temps de stabiliser mes priorités.",
-    status: "active"
+    status: "next"
   }
 ];
 

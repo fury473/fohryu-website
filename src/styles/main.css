@@ -17,7 +17,7 @@
   --signal: #7fd4ff;
   --usable: #91d37b;
   --planned: #c8b6ff;
-  --paused: #ffb36a;
+  --next: #ffb36a;
   --completed: #8fe6a5;
   --radius: 8px;
   --max-width: 1180px;
@@ -522,7 +522,7 @@ p {
   border-radius: var(--radius);
 }
 
-.now-list li {
+.now-list .now-item {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -533,8 +533,8 @@ p {
   --now-border: rgba(127, 212, 255, 0.72);
   --now-glow: rgba(127, 212, 255, 0.3);
   background:
-    radial-gradient(circle at 15% 0%, rgba(var(--now-accent-rgb), 0.2), transparent 34%),
-    linear-gradient(135deg, rgba(var(--now-accent-rgb), 0.13), transparent 52%),
+    radial-gradient(circle at 16% 0%, rgba(var(--now-accent-rgb), 0.28), transparent 35%),
+    linear-gradient(135deg, rgba(var(--now-accent-rgb), 0.16), transparent 54%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.045), transparent),
     rgba(255, 255, 255, 0.035);
   border-color: var(--now-border);
@@ -548,7 +548,7 @@ p {
     transform 180ms ease;
 }
 
-.now-list li::before {
+.now-list .now-item::before {
   position: absolute;
   top: 0;
   left: 0;
@@ -560,7 +560,7 @@ p {
   opacity: 0.95;
 }
 
-.now-list li::after {
+.now-list .now-item::after {
   position: absolute;
   inset: 0;
   pointer-events: none;
@@ -569,58 +569,64 @@ p {
   border-radius: inherit;
 }
 
-.now-item--active {
+.now-list .now-item--active {
   --now-accent: var(--active);
   --now-accent-rgb: 127, 212, 255;
   --now-border: rgba(127, 212, 255, 0.78);
   --now-glow: rgba(127, 212, 255, 0.34);
+  background:
+    radial-gradient(circle at 20% 0%, rgba(127, 212, 255, 0.34), transparent 38%),
+    linear-gradient(135deg, rgba(127, 212, 255, 0.18), rgba(127, 212, 255, 0.045) 54%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent),
+    rgba(255, 255, 255, 0.04);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.08),
     0 0 0 1px rgba(127, 212, 255, 0.2),
     0 18px 54px rgba(0, 0, 0, 0.28),
-    0 0 36px rgba(127, 212, 255, 0.18);
+    0 0 38px rgba(127, 212, 255, 0.22);
 }
 
-.now-item--active::after {
-  border-color: rgba(127, 212, 255, 0.7);
-  box-shadow:
-    inset 0 0 20px rgba(127, 212, 255, 0.13),
-    0 0 22px rgba(127, 212, 255, 0.12);
+.now-list .now-item--active::after {
+  border-color: rgba(127, 212, 255, 0.62);
+  box-shadow: inset 0 0 20px rgba(127, 212, 255, 0.13);
 }
 
-.now-item--paused {
-  --now-accent: var(--paused);
+.now-list .now-item--next {
+  --now-accent: var(--next);
   --now-accent-rgb: 255, 179, 106;
   --now-border: rgba(255, 179, 106, 0.58);
   --now-glow: rgba(255, 179, 106, 0.2);
   background:
     repeating-linear-gradient(
       135deg,
-      rgba(255, 179, 106, 0.07) 0,
-      rgba(255, 179, 106, 0.07) 1px,
+      rgba(255, 179, 106, 0.1) 0,
+      rgba(255, 179, 106, 0.1) 1px,
       transparent 1px,
       transparent 12px
     ),
-    radial-gradient(circle at 15% 0%, rgba(255, 179, 106, 0.14), transparent 34%),
-    rgba(255, 255, 255, 0.035);
+    radial-gradient(circle at 18% 0%, rgba(255, 179, 106, 0.23), transparent 36%),
+    linear-gradient(135deg, rgba(255, 179, 106, 0.13), rgba(255, 179, 106, 0.035) 58%),
+    rgba(255, 255, 255, 0.033);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.055),
+    0 12px 34px rgba(0, 0, 0, 0.16),
+    0 0 20px rgba(255, 179, 106, 0.08);
 }
 
-.now-item--completed {
+.now-list .now-item--completed {
   --now-accent: var(--completed);
   --now-accent-rgb: 143, 230, 165;
   --now-border: rgba(143, 230, 165, 0.54);
   --now-glow: rgba(143, 230, 165, 0.18);
   background:
-    linear-gradient(135deg, rgba(143, 230, 165, 0.12), transparent 46%),
+    radial-gradient(circle at 18% 0%, rgba(143, 230, 165, 0.2), transparent 36%),
+    linear-gradient(135deg, rgba(143, 230, 165, 0.14), rgba(143, 230, 165, 0.035) 54%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent),
     rgba(255, 255, 255, 0.03);
-}
-
-.now-item__meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
-  margin-bottom: 0.7rem;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.055),
+    0 12px 34px rgba(0, 0, 0, 0.16),
+    0 0 20px rgba(143, 230, 165, 0.07);
 }
 
 .now-status {
@@ -655,8 +661,8 @@ p {
   color: #d6f4ff;
 }
 
-.now-status--paused {
-  --now-accent: var(--paused);
+.now-status--next {
+  --now-accent: var(--next);
   --now-accent-rgb: 255, 179, 106;
   --now-glow: rgba(255, 179, 106, 0.22);
   color: #ffe1bf;
@@ -1274,7 +1280,7 @@ p {
     animation: signal-pulse 1800ms ease-out infinite;
   }
 
-  .now-item--active::after {
+  .now-list .now-item--active {
     animation: now-active-border 2600ms ease-in-out infinite;
   }
 
@@ -1300,15 +1306,21 @@ p {
   100% {
     border-color: rgba(127, 212, 255, 0.38);
     box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
       inset 0 0 14px rgba(127, 212, 255, 0.08),
-      0 0 0 rgba(127, 212, 255, 0);
+      0 0 0 1px rgba(127, 212, 255, 0.16),
+      0 18px 54px rgba(0, 0, 0, 0.28),
+      0 0 24px rgba(127, 212, 255, 0.12);
   }
 
   50% {
-    border-color: rgba(127, 212, 255, 0.82);
+    border-color: rgba(127, 212, 255, 0.9);
     box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
       inset 0 0 22px rgba(127, 212, 255, 0.16),
-      0 0 24px rgba(127, 212, 255, 0.2);
+      0 0 0 2px rgba(127, 212, 255, 0.3),
+      0 18px 54px rgba(0, 0, 0, 0.28),
+      0 0 46px rgba(127, 212, 255, 0.28);
   }
 }
 

@@ -212,9 +212,9 @@ function renderNow(): HTMLElement {
               className: `now-item now-item--${item.status}`,
               attrs: { id: `now-${item.id}` },
               children: [
-                el("div", {
-                  className: "now-item__meta",
-                  children: [renderNowStatus(item.status)]
+                el("span", {
+                  className: "sr-only",
+                  text: `Statut : ${nowStatusLabels[item.status]}`
                 }),
                 el("h3", { text: item.title }),
                 el("p", { text: item.description })

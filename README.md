@@ -30,6 +30,10 @@ Le serveur Vite expose le site en local. Les contenus principaux sont dans :
 - `src/render/` pour le rendu DOM ;
 - `src/styles/` pour l'identité visuelle.
 
+Le watcher du serveur de développement utilise un polling raisonnable afin de
+détecter les modifications faites depuis Windows/VS Code sur le dépôt monté sous
+WSL. Cette configuration ne concerne pas le build de production.
+
 Pour comprendre la composition de la page, voir
 [`docs/homepage-architecture.md`](docs/homepage-architecture.md). Pour les
 consignes destinées aux agents de maintenance, voir [`AGENTS.md`](AGENTS.md).

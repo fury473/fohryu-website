@@ -16,9 +16,18 @@ function readGitValue(args: string[]): string | null {
   }
 }
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   define: {
     __FOHRYU_COMMITS_URL__: JSON.stringify(COMMITS_URL),
     __FOHRYU_LAST_COMMIT_DATE__: JSON.stringify(readGitValue(["log", "-1", "--format=%cI"]))
-  }
-});
+  },
+  server:
+    command === "serve"
+      ? {
+          watch: {
+            interval: 750,
+            usePolling: true
+          }
+        }
+      : undefined
+}));
