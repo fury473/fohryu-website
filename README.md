@@ -47,7 +47,9 @@ npm run build
 La sortie statique est produite dans `dist/`. Pendant le build, Vite tente de lire
 la date du dernier commit Git pour afficher la mention `Dernière modification`
 dans le footer. Si les métadonnées Git ne sont pas disponibles, le site reste
-buildable et affiche un fallback explicite.
+buildable et affiche un fallback explicite. La version affichée sur la page vient
+du tag SemVer exact du commit courant, par exemple `0.2.0`, ou du short SHA si le
+commit n'est pas taggé.
 
 ## Preview
 

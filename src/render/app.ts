@@ -89,6 +89,8 @@ function renderHeader(): HTMLElement {
 }
 
 function renderHero(): HTMLElement {
+  const versionLabel = buildMetadata.appVersion;
+
   return el("section", {
     className: "hero section",
     attrs: { id: "top" },
@@ -99,7 +101,7 @@ function renderHero(): HTMLElement {
           el("div", {
             className: "hero__content reveal",
             children: [
-              el("p", { className: "eyebrow", text: "Atelier public / v0.1" }),
+              el("p", { className: "eyebrow", text: `Atelier public / ${versionLabel}` }),
               el("h1", { text: "Construire, expérimenter, documenter." }),
               el("p", {
                 className: "hero__intro",
@@ -165,7 +167,10 @@ function renderHero(): HTMLElement {
               el("figcaption", {
                 children: [
                   el("span", { text: "Une carte de travail, pas un plan figé." }),
-                  el("span", { className: "hero-map__caption-code", text: "signal / v0.1" })
+                  el("span", {
+                    className: "hero-map__caption-code",
+                    text: `signal / ${versionLabel}`
+                  })
                 ]
               })
             ]

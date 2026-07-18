@@ -27,10 +27,12 @@ lien d'évitement, le conteneur `#app`, le fallback `noscript` et charge
 `src/main.ts` ajoute la classe `js` au document, récupère `#app`, puis appelle
 `renderApp(root)`.
 
-`vite.config.ts` calcule au build les métadonnées Git publiques injectées dans le
-bundle : URL d'historique des commits et date ISO du dernier commit. Si Git ou
-`.git` n'est pas disponible dans l'environnement de build, la date injectée vaut
-`null` et le rendu affiche un fallback explicite.
+`vite.config.ts` calcule au build les métadonnées publiques injectées dans le
+bundle : version affichée, URL d'historique des commits et date ISO du dernier
+commit. La version vient du tag SemVer exact du commit courant, affiché avec un
+préfixe `v`, ou du short SHA lorsque le commit n'est pas taggé. Si Git ou `.git`
+n'est pas disponible dans l'environnement de build, la date injectée vaut `null`
+et la version vaut `dev`.
 
 La même configuration active le polling uniquement pour le serveur de
 développement Vite afin de détecter les modifications faites depuis Windows sur le
@@ -61,8 +63,8 @@ Les données éditoriales sont séparées du rendu.
 - `spaces` : points d'accès publics, prévus ou protégés.
 
 `src/data/build.ts` expose les métadonnées statiques injectées par Vite. Elles ne
-dépendent d'aucun backend et servent uniquement à afficher la date du dernier
-commit Git lorsqu'elle est connue.
+dépendent d'aucun backend et servent à afficher la version de l'application ainsi
+que la date du dernier commit Git lorsqu'elle est connue.
 
 `src/data/projects.ts` contient :
 
@@ -120,6 +122,8 @@ Le hero pose l'identité : atelier public, phrase principale, introduction, appe
 
 L'objectif est de donner une première impression plus incarnée sans faire basculer
 la palette générale vers le rose de l'asset Ryūko.
+La version affichée dans l'eyebrow et la légende technique du hero vient de
+`buildMetadata.appVersion`, pas d'une chaîne éditoriale dupliquée.
 
 ### Récemment
 
