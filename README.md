@@ -38,6 +38,25 @@ Pour comprendre la composition de la page, voir
 [`docs/homepage-architecture.md`](docs/homepage-architecture.md). Pour les
 consignes destinées aux agents de maintenance, voir [`AGENTS.md`](AGENTS.md).
 
+## Workflow Git et versioning
+
+Tout nouvel incrément part du dernier commit de la branche par défaut. Le flux
+attendu est :
+
+1. synchroniser la branche par défaut avec `origin` ;
+2. créer une branche dédiée depuis ce commit, par exemple `feature/...`,
+   `hotfix/...` ou `docs/...` selon l'intention ;
+3. produire une ou plusieurs commits sur cette branche ;
+4. pousser la branche et ouvrir une PR.
+
+La review et le merge des PR restent faits manuellement. Sauf demande explicite,
+les changements ne se font donc pas directement sur `main`.
+
+L'application suit SemVer via les tags posés sur la branche par défaut. Une
+feature prépare normalement la prochaine version mineure, un hotfix la prochaine
+version patch, et une évolution majeure la prochaine version majeure. Si le commit
+buildé n'a pas de tag SemVer exact, la version affichée utilise le short SHA.
+
 ## Build
 
 ```bash

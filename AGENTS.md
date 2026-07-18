@@ -67,6 +67,24 @@ documentation maintenance. If repo-local skills are not auto-discovered, read it
 
 ## Validation And Git
 
+Start every new feature, hotfix, documentation increment or similar change from
+the latest commit of the default branch. Fetch the remote, fast-forward the local
+default branch when needed, then create a dedicated branch from that commit before
+editing files.
+
+Use an intent-based branch prefix such as `feature/`, `hotfix/` or `docs/`. Keep
+related work as one or more successive commits on that branch. Do not work
+directly on the default branch unless the user explicitly asks for it.
+
+Every new increment should end with a pull request unless the user explicitly
+overrides that workflow. The user handles review and merge. Do not merge pull
+requests locally or remotely unless the user explicitly asks for it.
+
+The application uses SemVer tags on the default branch. During feature work,
+plan the next minor version; during hotfix work, plan the next patch version; for
+breaking or major shifts, plan the next major version. If the current commit has
+no exact SemVer tag, the app falls back to displaying the short commit ref.
+
 Before committing code or visual changes, run:
 
 ```bash

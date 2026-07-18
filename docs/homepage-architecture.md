@@ -34,6 +34,12 @@ préfixe `v`, ou du short SHA lorsque le commit n'est pas taggé. Si Git ou `.gi
 n'est pas disponible dans l'environnement de build, la date injectée vaut `null`
 et la version vaut `dev`.
 
+Les tags SemVer sont posés sur la branche par défaut après merge. Une branche de
+feature prépare l'incrément mineur suivant, une branche de hotfix prépare
+l'incrément patch suivant, et une évolution de rupture prépare l'incrément majeur
+suivant. Tant que la branche n'est pas taggée, l'affichage public de version reste
+basé sur le short SHA du commit buildé.
+
 La même configuration active le polling uniquement pour le serveur de
 développement Vite afin de détecter les modifications faites depuis Windows sur le
 dépôt monté sous WSL, sans modifier le comportement du build de production.
