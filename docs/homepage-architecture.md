@@ -134,7 +134,10 @@ et plus temporelle que la cartographie des projets. Chaque entrée représente u
 sujet de travail et porte un `status` maintenu dans `src/data/site.ts` :
 `active`, `paused` ou `completed`. Le rendu génère automatiquement le libellé et
 la classe visuelle associée ; ajouter ou déplacer un sujet ne demande donc pas de
-modifier `src/render/` ou `src/styles/`.
+modifier `src/render/` ou `src/styles/`. Les sujets actifs utilisent l'état le
+plus visible, avec une bordure animée lorsque les préférences de mouvement le
+permettent ; les sujets en pause et terminés gardent des couleurs distinctes plus
+discrètes.
 
 ### Projets
 
@@ -176,10 +179,11 @@ marqués comme prévus plutôt que présentés comme accessibles.
 
 Le footer reprend la marque, la mention de site expérimental et quelques liens
 externes. Le watermark Ryūko y sert de signature visuelle plus visible que dans le
-hero, tout en restant secondaire par rapport au contenu. Il affiche aussi la date
-du dernier commit Git lorsqu'elle est disponible au build, avec un lien vers
-l'historique public des commits. Si les métadonnées Git ne sont pas disponibles,
-le footer garde le lien et indique que la date est indisponible.
+hero, tout en restant secondaire par rapport au contenu. Il affiche aussi une
+mention `Dernière modification` calculée depuis le dernier commit Git disponible
+au build. La date et l'heure sont directement liées à l'historique public des
+commits. Si les métadonnées Git ne sont pas disponibles, le footer garde un
+fallback explicite lié au même historique.
 
 ## Easter egg Fury
 
@@ -220,6 +224,7 @@ Les principaux choix d'accessibilité sont :
 - textes injectés via `textContent`, pas via HTML brut ;
 - liens externes ouverts avec `target="_blank"` et `rel="noreferrer"` ;
 - états de focus visibles ;
+- animation de bordure de l'état actif limitée par `prefers-reduced-motion` ;
 - modale avec `role="dialog"`, `aria-modal`, titre et description associés ;
 - texte complet de l'easter egg disponible en `.sr-only`, sans dupliquer la
   lecture de l'image ;
@@ -246,7 +251,7 @@ Les tokens CSS sont déclarés dans `:root` :
 - bordures : `--line`, `--line-strong`, `--line-warm` ;
 - texte : `--text`, `--muted`, `--soft` ;
 - accents : `--accent`, `--accent-2`, `--signal` ;
-- états : `--usable`, `--planned` ;
+- états : `--usable`, `--planned`, `--paused`, `--completed` ;
 - dimensions partagées : `--radius`, `--max-width`, `--shadow`.
 
 Le fond de page combine une grille très légère et des halos chauds. Les sections

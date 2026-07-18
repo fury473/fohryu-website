@@ -199,7 +199,18 @@ function renderNow(): HTMLElement {
               children: [
                 el("div", {
                   className: "now-item__meta",
-                  children: [el("span", { className: "now-status", text: nowStatusLabels[item.status] })]
+                  children: [
+                    el("span", {
+                      className: "now-status",
+                      children: [
+                        el("span", {
+                          className: "now-status__mark",
+                          attrs: { "aria-hidden": "true" }
+                        }),
+                        nowStatusLabels[item.status]
+                      ]
+                    })
+                  ]
                 }),
                 el("h3", { text: item.title }),
                 el("p", { text: item.description })
@@ -517,15 +528,34 @@ function renderBuildMetadata(): HTMLElement {
   return el("p", {
     className: `footer-build${formattedDate ? "" : " footer-build--fallback"}`,
     children: [
-      "Dernier commit Git : ",
+      "Dernière modification : ",
       formattedDate && buildMetadata.lastCommitDate
-        ? el("time", {
-            text: formattedDate,
-            attrs: { datetime: buildMetadata.lastCommitDate }
+        ? el("a", {
+            className: "footer-build__date",
+            attrs: {
+              href: buildMetadata.commitsUrl,
+              target: "_blank",
+              rel: "noreferrer",
+              "aria-label": `Voir l'historique public des commits, dernière modification ${formattedDate}`
+            },
+            children: [
+              el("time", {
+                text: formattedDate,
+                attrs: { datetime: buildMetadata.lastCommitDate }
+              })
+            ]
           })
-        : el("span", { text: "date indisponible" }),
-      " - ",
-      link("historique public", buildMetadata.commitsUrl, "footer-build__link")
+        : el("a", {
+            className: "footer-build__date footer-build__date--fallback",
+            text: "date indisponible",
+            attrs: {
+              href: buildMetadata.commitsUrl,
+              target: "_blank",
+              rel: "noreferrer",
+              "aria-label":
+                "Voir l'historique public des commits, date de dernière modification indisponible"
+            }
+          })
     ]
   });
 }
@@ -543,6 +573,9 @@ function formatCommitDate(dateIso: string | null): string | null {
 
   return new Intl.DateTimeFormat("fr-FR", {
     day: "numeric",
+    hour: "2-digit",
+    hourCycle: "h23",
+    minute: "2-digit",
     month: "long",
     timeZone: "Europe/Paris",
     year: "numeric"

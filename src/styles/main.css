@@ -17,7 +17,7 @@
   --usable: #91d37b;
   --planned: #c8b6ff;
   --paused: #ffb36a;
-  --completed: #91d37b;
+  --completed: #8fe6a5;
   --radius: 8px;
   --max-width: 1180px;
   --shadow: 0 24px 90px rgba(0, 0, 0, 0.34);
@@ -514,8 +514,21 @@ p {
   min-height: 10rem;
   overflow: hidden;
   --now-accent: var(--signal);
-  --now-status-bg: rgba(127, 212, 255, 0.1);
-  --now-status-border: rgba(127, 212, 255, 0.28);
+  --now-accent-rgb: 127, 212, 255;
+  --now-border: rgba(127, 212, 255, 0.46);
+  --now-glow: rgba(127, 212, 255, 0.16);
+  --now-status-bg: rgba(127, 212, 255, 0.14);
+  --now-status-border: rgba(127, 212, 255, 0.44);
+  --now-status-text: #d6f4ff;
+  background:
+    linear-gradient(135deg, rgba(var(--now-accent-rgb), 0.11), transparent 48%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), transparent),
+    rgba(255, 255, 255, 0.035);
+  border-color: var(--now-border);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.055),
+    0 12px 34px rgba(0, 0, 0, 0.16);
+  isolation: isolate;
 }
 
 .now-list li::before {
@@ -529,16 +542,46 @@ p {
   opacity: 0.7;
 }
 
+.now-list li::after {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  border: 1px solid transparent;
+  border-radius: inherit;
+}
+
+.now-item--active {
+  --now-border: rgba(127, 212, 255, 0.66);
+  --now-glow: rgba(127, 212, 255, 0.26);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 0 0 1px rgba(127, 212, 255, 0.08),
+    0 18px 48px rgba(0, 0, 0, 0.22),
+    0 0 30px rgba(127, 212, 255, 0.11);
+}
+
+.now-item--active::after {
+  border-color: rgba(127, 212, 255, 0.48);
+  box-shadow: inset 0 0 18px rgba(127, 212, 255, 0.1);
+}
+
 .now-item--paused {
   --now-accent: var(--paused);
-  --now-status-bg: rgba(255, 179, 106, 0.1);
-  --now-status-border: rgba(255, 179, 106, 0.28);
+  --now-accent-rgb: 255, 179, 106;
+  --now-border: rgba(255, 179, 106, 0.38);
+  --now-status-bg: rgba(255, 179, 106, 0.12);
+  --now-status-border: rgba(255, 179, 106, 0.36);
+  --now-status-text: #ffe1bf;
 }
 
 .now-item--completed {
   --now-accent: var(--completed);
-  --now-status-bg: rgba(145, 211, 123, 0.1);
-  --now-status-border: rgba(145, 211, 123, 0.28);
+  --now-accent-rgb: 143, 230, 165;
+  --now-border: rgba(143, 230, 165, 0.34);
+  --now-status-bg: rgba(143, 230, 165, 0.11);
+  --now-status-border: rgba(143, 230, 165, 0.32);
+  --now-status-text: #d6f7df;
 }
 
 .now-item__meta {
@@ -551,10 +594,11 @@ p {
 .now-status {
   display: inline-flex;
   align-items: center;
+  gap: 0.42rem;
   width: fit-content;
   min-height: 1.65rem;
-  padding: 0 0.52rem;
-  color: var(--now-accent);
+  padding: 0 0.58rem 0 0.48rem;
+  color: var(--now-status-text);
   font-size: 0.72rem;
   font-weight: 760;
   text-transform: uppercase;
@@ -562,6 +606,14 @@ p {
   background: var(--now-status-bg);
   border: 1px solid var(--now-status-border);
   border-radius: 999px;
+}
+
+.now-status__mark {
+  width: 0.48rem;
+  height: 0.48rem;
+  background: var(--now-accent);
+  border-radius: 999px;
+  box-shadow: 0 0 14px var(--now-glow);
 }
 
 .now-list h3,
@@ -1001,13 +1053,18 @@ p {
   color: #d8ccc6;
 }
 
-.footer-build__link {
+.footer-build__date {
   color: var(--signal);
   font-weight: 700;
+  text-decoration-color: rgba(127, 212, 255, 0.34);
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
 }
 
-.footer-build__link:hover {
+.footer-build__date:hover {
   color: var(--accent-2);
+  text-decoration-color: rgba(255, 179, 106, 0.46);
 }
 
 .footer-brand {
@@ -1153,6 +1210,10 @@ p {
   .signal-dot::after {
     animation: signal-pulse 1800ms ease-out infinite;
   }
+
+  .now-item--active::after {
+    animation: now-active-border 2600ms ease-in-out infinite;
+  }
 }
 
 @keyframes signal-pulse {
@@ -1164,6 +1225,23 @@ p {
   100% {
     opacity: 0;
     transform: scale(1.75);
+  }
+}
+
+@keyframes now-active-border {
+  0%,
+  100% {
+    border-color: rgba(127, 212, 255, 0.38);
+    box-shadow:
+      inset 0 0 14px rgba(127, 212, 255, 0.08),
+      0 0 0 rgba(127, 212, 255, 0);
+  }
+
+  50% {
+    border-color: rgba(127, 212, 255, 0.82);
+    box-shadow:
+      inset 0 0 22px rgba(127, 212, 255, 0.16),
+      0 0 24px rgba(127, 212, 255, 0.2);
   }
 }
 
