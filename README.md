@@ -62,6 +62,10 @@ buildé n'a pas lui-même de tag SemVer, la dernière version logicielle publié
 reste le dernier tag SemVer atteignable. La révision exacte affichée séparément
 utilise le short SHA du commit buildé.
 
+`package.json` ne porte volontairement pas de champ `version` : le package est
+privé et n'est pas publié sur npm. La source de vérité pour la version publique du
+site reste donc uniquement les tags Git SemVer.
+
 ## Build
 
 ```bash

@@ -80,6 +80,10 @@ La version logicielle publiée affichée par le site est calculée au build depu
 dernier tag SemVer atteignable dans l'historique Git. La révision exacte affichée
 séparément vient du short SHA du commit buildé.
 
+`package.json` ne contient volontairement pas de champ `version`. Le projet est
+privé côté npm et n'est pas publié comme package ; conserver une version npm
+créerait une seconde source de vérité à synchroniser avec les tags Git.
+
 Ce modèle permet de représenter correctement les cas courants :
 
 - après un commit éditorial non taggé sur `main`, le site conserve par exemple

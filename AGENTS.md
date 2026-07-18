@@ -95,6 +95,8 @@ During feature work, plan the next minor version; during hotfix work, plan the
 next patch version; for breaking or major shifts, plan the next major version. If
 Git metadata is available, the app displays the latest reachable SemVer tag as
 the software version and the current short commit ref as the exact revision.
+Do not add a root `package.json` version as a competing source of truth; this
+private package uses Git tags for public software versioning.
 
 ## Validation And Git
 

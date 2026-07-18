@@ -44,6 +44,10 @@ SemVer. Tant que le commit buildé n'est pas taggé, l'affichage public de versi
 reste basé sur le dernier tag SemVer atteignable ; le short SHA sert uniquement à
 identifier la révision exacte actuellement affichée.
 
+`package.json` ne contient pas de champ `version` : le projet est un site statique
+privé côté npm, et les tags Git restent l'unique source de vérité pour la version
+logicielle publique.
+
 Le déploiement de production et les previews de branche restent séparés : la
 production publie une version active du Worker sur `fohryu.com`, tandis que les
 previews utilisent des versions Workers non promues exposées par Preview URLs. Le
