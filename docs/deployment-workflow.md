@@ -76,37 +76,63 @@ branche par défaut :
 Les changements purement éditoriaux restent versionnés par Git, mais ne doivent
 pas déclencher à eux seuls une nouvelle version SemVer.
 
-La version affichée par le site est calculée au build depuis le tag SemVer exact
-du commit courant. Tant que le commit buildé n'est pas taggé, le site affiche le
-short SHA du commit.
+La version logicielle publiée affichée par le site est calculée au build depuis le
+dernier tag SemVer atteignable dans l'historique Git. La révision exacte affichée
+séparément vient du short SHA du commit buildé.
+
+Ce modèle permet de représenter correctement les cas courants :
+
+- après un commit éditorial non taggé sur `main`, le site conserve par exemple
+  `v0.2.0` comme version logicielle et affiche une nouvelle révision ;
+- sur une branche de feature ou de preview, le site affiche la dernière version
+  logicielle publiée et la révision exacte de la branche ;
+- après un tag SemVer posé sur `main`, le prochain build de ce commit affiche la
+  nouvelle version logicielle.
+
+Le build Cloudflare doit avoir accès aux tags Git pour calculer cette version. La
+commande `npm run build:cloudflare` synchronise donc les tags avant d'exécuter le
+build Vite.
 
 ## Scripts de déploiement
 
 Les scripts distinguent explicitement la production et la preview :
 
 ```bash
+npm run build:cloudflare
+```
+
+Synchronise les tags Git puis exécute `npm run build`. Cette commande est prévue
+pour Workers Builds afin que le calcul de version logicielle dispose des derniers
+tags SemVer.
+
+```bash
 npm run deploy:production
 ```
 
-Build le site puis exécute `wrangler deploy`. Cette commande crée une nouvelle
-version du Worker et la promeut comme déploiement actif. Elle impacte donc
-`fohryu.com`.
+Synchronise les tags Git, build le site puis exécute `wrangler deploy`. Cette
+commande crée une nouvelle version du Worker et la promeut comme déploiement
+actif. Elle impacte donc `fohryu.com`.
+
+Elle peut être lancée depuis une branche lorsqu'un besoin exceptionnel l'exige :
+démonstration, validation ou test particulier. Cet usage doit rester explicite,
+car il publie en production le contenu de la branche courante.
 
 ```bash
 npm run deploy:preview
 ```
 
-Build le site puis exécute `wrangler versions upload`. Cette commande crée une
-version du Worker et retourne une URL de preview si les Preview URLs sont
-activées. Elle ne promeut pas cette version en production.
+Synchronise les tags Git, build le site puis exécute `wrangler versions upload`.
+Cette commande crée une version du Worker et retourne une URL de preview si les
+Preview URLs sont activées. Elle ne promeut pas cette version en production.
 
 Les scripts internes ci-dessous exécutent uniquement l'étape Wrangler :
 
 - `npm run cf:deploy:production` : `wrangler deploy` ;
 - `npm run cf:deploy:preview` : `wrangler versions upload`.
 
-Ils sont prévus pour Workers Builds, qui peut exécuter `npm run build` comme
-commande de build séparée avant la commande de déploiement.
+Ils sont prévus pour Workers Builds, qui peut exécuter
+`npm run build:cloudflare` comme commande de build séparée avant la commande de
+déploiement.
 
 ## Séparation production et previews
 
@@ -121,6 +147,63 @@ La solution cible reste native Cloudflare Workers :
 Cette approche évite de créer un second Worker, un sous-domaine de preview custom,
 une route Cloudflare supplémentaire ou une surcouche GitHub Actions tant que le
 besoin reste de prévisualiser les branches.
+
+## Déploiements automatiques avec Workers Builds
+
+Le workflow cible utilise Workers Builds comme CI/CD natif Cloudflare. Une fois le
+dépôt connecté au Worker, Cloudflare écoute les pushs GitHub et exécute une
+commande de build suivie d'une commande de déploiement.
+
+Pour la production :
+
+1. un merge de PR vers `main` ou un commit éditorial direct sur `main` déclenche
+   un Workers Build ;
+2. Workers Builds exécute la commande de build `npm run build:cloudflare` ;
+3. Workers Builds exécute la commande de déploiement production
+   `npm run cf:deploy:production` ;
+4. Wrangler exécute `wrangler deploy`, crée une version du Worker et la promeut
+   comme déploiement actif ;
+5. `fohryu.com` sert cette nouvelle version.
+
+Pour les previews :
+
+1. un push vers une branche non-production déclenche un Workers Build si les
+   builds de branches non-production sont activés ;
+2. Workers Builds exécute la même commande de build `npm run build:cloudflare` ;
+3. Workers Builds remplace la commande de déploiement production par la commande
+   non-production `npm run cf:deploy:preview` ;
+4. Wrangler exécute `wrangler versions upload`, crée une version du Worker et
+   retourne une Preview URL sans promotion en production ;
+5. si le commit appartient à une PR, l'intégration GitHub de Cloudflare peut
+   publier un commentaire contenant les URLs de preview.
+
+Avantages :
+
+- le déploiement de production devient automatique à chaque évolution de `main` ;
+- les modifications éditoriales directes sur `main` sont publiées sans workflow
+  de release logiciel ;
+- les previews de branche utilisent le même Worker et la même configuration que
+  la production, sans nouveau domaine ni Worker parallèle ;
+- les commandes restent proches du workflow manuel Wrangler existant ;
+- les accès Cloudflare de déploiement restent centralisés dans Workers Builds.
+
+Limites et points de vigilance :
+
+- la configuration Workers Builds vit dans Cloudflare, pas dans le dépôt ;
+- les previews Workers sont publiques sur `*.workers.dev` tant qu'aucune
+  protection Cloudflare Access n'est ajoutée ;
+- les réglages Workers Builds modifiés dans le dashboard s'appliquent aux builds
+  suivants, pas nécessairement aux builds déjà lancés ;
+- le tag SemVer posé après un merge sur `main` peut arriver après le build
+  automatique déclenché par ce merge. Dans ce cas, la production peut afficher la
+  version logicielle précédente avec la nouvelle révision jusqu'au prochain build
+  du commit taggé ;
+- lorsqu'un tag SemVer doit devenir visible immédiatement après un merge, poser
+  le tag sur le commit de `main`, puis relancer un build production du même commit
+  ou lancer exceptionnellement `npm run deploy:production` depuis `main` après
+  synchronisation des tags ;
+- un déploiement manuel de production depuis une branche reste possible pour un
+  besoin spécifique, mais il doit rester exceptionnel et assumé.
 
 ## Configuration Cloudflare proposée
 
@@ -139,7 +222,7 @@ Modifications proposées :
    uploadées puissent être consultées en preview.
 3. Connecter `fohryu-website` à Workers Builds depuis le dashboard Cloudflare.
 4. Définir `main` comme branche de production.
-5. Définir la commande de build Workers Builds sur `npm run build`.
+5. Définir la commande de build Workers Builds sur `npm run build:cloudflare`.
 6. Définir la commande de déploiement de production sur
    `npm run cf:deploy:production`.
 7. Activer les builds de branches non-production.
@@ -163,7 +246,8 @@ Justification :
 Impacts attendus :
 
 - les pushes sur `main` pourront produire un build de production si Workers
-  Builds est activé ;
+  Builds est activé, qu'ils viennent d'un merge de PR ou d'un commit éditorial
+  direct ;
 - les pushes sur les branches non-production pourront produire une URL de preview
   stable par branche et une URL de preview par commit ;
 - les previews seront publiques sur `*.workers.dev` sauf protection Cloudflare
@@ -182,6 +266,8 @@ Impacts attendus :
 7. vérifier qu'une PR reçoit bien un commentaire Cloudflare avec une URL de
    preview ;
 8. vérifier qu'un push/merge sur `main` met à jour le déploiement actif attendu.
+9. vérifier qu'un commit éditorial direct sur `main` déclenche aussi un
+   déploiement de production.
 
 Retour arrière :
 

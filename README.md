@@ -58,7 +58,9 @@ une nouvelle version SemVer.
 L'application suit SemVer via les tags posés sur la branche par défaut. Une
 feature prépare normalement la prochaine version mineure, un hotfix la prochaine
 version patch, et une évolution majeure la prochaine version majeure. Si le commit
-buildé n'a pas de tag SemVer exact, la version affichée utilise le short SHA.
+buildé n'a pas lui-même de tag SemVer, la dernière version logicielle publiée
+reste le dernier tag SemVer atteignable. La révision exacte affichée séparément
+utilise le short SHA du commit buildé.
 
 ## Build
 
@@ -69,9 +71,9 @@ npm run build
 La sortie statique est produite dans `dist/`. Pendant le build, Vite tente de lire
 la date du dernier commit Git pour afficher la mention `Dernière modification`
 dans le footer. Si les métadonnées Git ne sont pas disponibles, le site reste
-buildable et affiche un fallback explicite. La version affichée sur la page vient
-du tag SemVer exact du commit courant, par exemple `0.2.0`, ou du short SHA si le
-commit n'est pas taggé.
+buildable et affiche un fallback explicite. La version logicielle affichée sur la
+page vient du dernier tag SemVer atteignable, par exemple `v0.2.0`. La révision
+exacte du build est affichée séparément avec le short SHA du commit.
 
 ## Preview
 
@@ -90,8 +92,8 @@ séparés.
 npm run deploy:production
 ```
 
-Cette commande build le site puis exécute `wrangler deploy`. Elle met à jour le
-déploiement actif servi sur `fohryu.com`.
+Cette commande synchronise les tags Git, build le site puis exécute
+`wrangler deploy`. Elle met à jour le déploiement actif servi sur `fohryu.com`.
 
 Pour produire une preview de branche sans promouvoir le résultat en production :
 
@@ -99,13 +101,20 @@ Pour produire une preview de branche sans promouvoir le résultat en production 
 npm run deploy:preview
 ```
 
-Cette commande build le site puis exécute `wrangler versions upload`. Elle crée
-une version Cloudflare Workers avec URL de preview, sans modifier le déploiement
-actif de production.
+Cette commande synchronise les tags Git, build le site puis exécute
+`wrangler versions upload`. Elle crée une version Cloudflare Workers avec URL de
+preview, sans modifier le déploiement actif de production.
 
 Les commandes internes `cf:deploy:production` et `cf:deploy:preview` exécutent
 uniquement l'étape Wrangler. Elles sont prévues pour Workers Builds lorsque le
-build Cloudflare exécute déjà `npm run build` séparément.
+build Cloudflare exécute déjà `npm run build:cloudflare` séparément.
+
+Dans le workflow cible, Workers Builds déclenche automatiquement un build sur
+chaque push vers `main`, qu'il s'agisse d'un merge de PR ou d'un commit éditorial
+direct. Les branches non-production produisent des previews si les builds de
+branches sont activés. Un déploiement manuel de production depuis une branche
+reste possible pour un besoin exceptionnel de démonstration, validation ou test,
+mais ne constitue pas le chemin nominal.
 
 La configuration détaillée du workflow Git, du versioning et des déploiements est
 documentée dans [`docs/deployment-workflow.md`](docs/deployment-workflow.md).

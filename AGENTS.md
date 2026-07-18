@@ -93,8 +93,8 @@ trigger a new SemVer version.
 The application uses SemVer tags on the default branch for software releases.
 During feature work, plan the next minor version; during hotfix work, plan the
 next patch version; for breaking or major shifts, plan the next major version. If
-the current commit has no exact SemVer tag, the app falls back to displaying the
-short commit ref.
+Git metadata is available, the app displays the latest reachable SemVer tag as
+the software version and the current short commit ref as the exact revision.
 
 ## Validation And Git
 
