@@ -2,7 +2,8 @@
 
 Ce document décrit le workflow de contribution et de déploiement du site statique
 `fohryu.com`. Il complète le `README.md`, qui reste le point d'entrée pour les
-commandes courantes.
+commandes courantes, et sert de référence détaillée pour les règles Git,
+versioning et Cloudflare.
 
 ## État inspecté
 
@@ -146,13 +147,13 @@ déploiement.
 
 ## Séparation production et previews
 
-La solution cible reste native Cloudflare Workers :
+La solution cible reste native Cloudflare Workers et repose sur un seul Worker :
 
-- production : Worker `fohryu-website`, route Custom Domain `fohryu.com`,
-  promotion via `wrangler deploy` ;
-- previews : versions non promues du même Worker, exposées via Workers Preview
-  URLs sur `*.workers.dev`, produites via `wrangler versions upload` ;
-- automatisation proposée : Workers Builds connecté au dépôt GitHub.
+- production : version promue du Worker `fohryu-website`, servie par le Custom
+  Domain `fohryu.com` ;
+- previews : versions non promues du même Worker, exposées par Workers Preview
+  URLs sur `*.workers.dev` ;
+- automatisation : Workers Builds connecté au dépôt GitHub.
 
 Cette approche évite de créer un second Worker, un sous-domaine de preview custom,
 une route Cloudflare supplémentaire ou une surcouche GitHub Actions tant que le
@@ -164,28 +165,13 @@ Le workflow cible utilise Workers Builds comme CI/CD natif Cloudflare. Une fois 
 dépôt connecté au Worker, Cloudflare écoute les pushs GitHub et exécute une
 commande de build suivie d'une commande de déploiement.
 
-Pour la production :
+| Cible | Déclencheur | Build | Déploiement | Résultat |
+| --- | --- | --- | --- | --- |
+| Production | Merge de PR ou commit éditorial direct sur `main` | `npm run build:cloudflare` | `npm run cf:deploy:production` | `wrangler deploy` promeut la version servie sur `fohryu.com`. |
+| Preview | Push sur branche non-production, si activé | `npm run build:cloudflare` | `npm run cf:deploy:preview` | `wrangler versions upload` crée une Preview URL sans promotion. |
 
-1. un merge de PR vers `main` ou un commit éditorial direct sur `main` déclenche
-   un Workers Build ;
-2. Workers Builds exécute la commande de build `npm run build:cloudflare` ;
-3. Workers Builds exécute la commande de déploiement production
-   `npm run cf:deploy:production` ;
-4. Wrangler exécute `wrangler deploy`, crée une version du Worker et la promeut
-   comme déploiement actif ;
-5. `fohryu.com` sert cette nouvelle version.
-
-Pour les previews :
-
-1. un push vers une branche non-production déclenche un Workers Build si les
-   builds de branches non-production sont activés ;
-2. Workers Builds exécute la même commande de build `npm run build:cloudflare` ;
-3. Workers Builds remplace la commande de déploiement production par la commande
-   non-production `npm run cf:deploy:preview` ;
-4. Wrangler exécute `wrangler versions upload`, crée une version du Worker et
-   retourne une Preview URL sans promotion en production ;
-5. si le commit appartient à une PR, l'intégration GitHub de Cloudflare peut
-   publier un commentaire contenant les URLs de preview.
+Si le commit appartient à une PR, l'intégration GitHub de Cloudflare peut publier
+un commentaire contenant les URLs de preview.
 
 Avantages :
 
@@ -224,7 +210,7 @@ Ressource concernée :
 - route de production : Custom Domain `fohryu.com` ;
 - dépôt source : `fury473/fohryu-website`.
 
-Modifications proposées :
+Modifications proposées après review et autorisation explicite :
 
 1. Conserver `workers_dev: false` dans `wrangler.jsonc` pour éviter d'exposer la
    route workers.dev principale comme une seconde URL publique de production.
@@ -239,19 +225,19 @@ Modifications proposées :
 8. Définir la commande de déploiement non-production sur
    `npm run cf:deploy:preview`.
 
-Les deux champs `workers_dev` et `preview_urls` sont préparés dans le dépôt, mais
-ne modifient pas l'état Cloudflare tant qu'aucun déploiement Wrangler ou Workers
-Build autorisé n'applique cette configuration.
+Les deux champs Wrangler sont préparés dans le dépôt, mais ne modifient pas l'état
+Cloudflare tant qu'aucun déploiement Wrangler ou Workers Build autorisé
+n'applique cette configuration. Les commandes Workers Builds ci-dessus reprennent
+les scripts définis dans la section `Scripts de déploiement`.
 
 Justification :
 
-- `wrangler deploy` est la commande qui promeut une version en production ;
-- `wrangler versions upload` crée une version et une URL de preview sans modifier
-  le déploiement actif ;
-- Workers Builds sait remplacer la commande de déploiement par une commande de
-  preview pour les branches non-production ;
-- les commentaires de PR et URLs de branche sont gérés nativement par
-  l'intégration GitHub de Cloudflare Workers.
+- `wrangler deploy` et `wrangler versions upload` couvrent déjà les deux chemins
+  production/preview sans Worker supplémentaire ;
+- Workers Builds peut appliquer une commande de déploiement différente pour les
+  branches non-production ;
+- les commentaires de PR et URLs de branche sont gérés par l'intégration GitHub
+  native de Cloudflare Workers.
 
 Impacts attendus :
 

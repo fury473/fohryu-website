@@ -29,32 +29,10 @@ lien d'évitement, le conteneur `#app`, le fallback `noscript` et charge
 
 `vite.config.ts` calcule au build les métadonnées publiques injectées dans le
 bundle : version logicielle affichée, révision exacte, URL d'historique des
-commits et date ISO du dernier commit. La version logicielle vient du dernier tag
-SemVer atteignable. Le nom réel du tag Git est sans préfixe `v`, par exemple
-`0.2.0`; le préfixe est ajouté uniquement pour l'affichage public sous la forme
-`v0.2.0`. La révision exacte vient du short SHA du commit buildé et peut être
-liée au commit public. Si Git ou `.git` n'est pas disponible dans l'environnement
-de build, la date injectée vaut `null` et les libellés Git utilisent un fallback
-explicite.
-
-Les tags SemVer sont posés sur la branche par défaut pour les incréments
-logiciels et suivent le format Git réel `MAJOR.MINOR.PATCH`, sans préfixe `v`.
-Une branche de feature prépare l'incrément mineur suivant, une branche de hotfix
-prépare l'incrément patch suivant, et une évolution de rupture prépare
-l'incrément majeur suivant. Les modifications purement éditoriales restent
-versionnées par Git mais ne déclenchent pas à elles seules une nouvelle version
-SemVer. Tant que le commit buildé n'est pas taggé, l'affichage public de version
-reste basé sur le dernier tag SemVer atteignable ; le short SHA sert uniquement à
-identifier la révision exacte actuellement affichée.
-
-`package.json` ne contient pas de champ `version` : le projet est un site statique
-privé côté npm, et les tags Git restent l'unique source de vérité pour la version
-logicielle publique.
-
-Le déploiement de production et les previews de branche restent séparés : la
-production publie une version active du Worker sur `fohryu.com`, tandis que les
-previews utilisent des versions Workers non promues exposées par Preview URLs. Le
-détail opérationnel vit dans `docs/deployment-workflow.md`.
+commits et date ISO du dernier commit. Ces valeurs sont exposées par
+`src/data/build.ts` et restent indépendantes d'un backend. Le détail de la
+politique version/révision, des tags SemVer et du déploiement Cloudflare vit dans
+`docs/deployment-workflow.md`.
 
 La même configuration active le polling uniquement pour le serveur de
 développement Vite afin de détecter les modifications faites depuis Windows sur le
@@ -84,9 +62,8 @@ Les données éditoriales sont séparées du rendu.
 - `principles` : principes éditoriaux et techniques ;
 - `spaces` : points d'accès publics, prévus ou protégés.
 
-`src/data/build.ts` expose les métadonnées statiques injectées par Vite. Elles ne
-dépendent d'aucun backend et servent à afficher la version logicielle publiée, la
-révision exacte du build et la date du dernier commit Git lorsqu'elle est connue.
+`src/data/build.ts` expose les métadonnées statiques décrites dans le pipeline de
+rendu.
 
 `src/data/projects.ts` contient :
 

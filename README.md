@@ -40,33 +40,20 @@ consignes destinées aux agents de maintenance, voir [`AGENTS.md`](AGENTS.md).
 
 ## Workflow Git et versioning
 
-Le projet distingue deux catégories de changements.
+Le détail du workflow Git, du versioning SemVer et de la séparation
+production/previews vit dans
+[`docs/deployment-workflow.md`](docs/deployment-workflow.md).
 
-Les évolutions logicielles ou d'infrastructure regroupent les features, hotfixes,
-changements d'architecture, composants, styles, modèle de données, scripts, build
-et déploiement. Elles partent du dernier commit de la branche par défaut, passent
-par une branche dédiée (`feature/...`, `hotfix/...`, `docs/...` selon
-l'intention), une ou plusieurs commits, un push, puis une PR. La review et le
-merge restent manuels.
+Résumé opérationnel :
 
-Les modifications purement éditoriales peuvent être faites directement sur
-`main`, sans branche ni PR : correction de texte, mise à jour d'un lien, donnée
-de contenu ou état existant dans `Maintenant`. Elles restent versionnées par Git,
-mais ne constituent pas un incrément logiciel et ne déclenchent pas à elles seules
-une nouvelle version SemVer.
-
-L'application suit SemVer via les tags posés sur la branche par défaut. Les noms
-réels des tags Git utilisent le format `MAJOR.MINOR.PATCH` sans préfixe `v`, par
-exemple `0.2.0`. Le préfixe `v` est ajouté uniquement dans l'affichage public, où
-ce tag devient `v0.2.0`. Une feature prépare normalement la prochaine version
-mineure, un hotfix la prochaine version patch, et une évolution majeure la
-prochaine version majeure. Si le commit buildé n'a pas lui-même de tag SemVer, la
-dernière version logicielle publiée reste le dernier tag SemVer atteignable. La
-révision exacte affichée séparément utilise le short SHA du commit buildé.
-
-`package.json` ne porte volontairement pas de champ `version` : le package est
-privé et n'est pas publié sur npm. La source de vérité pour la version publique du
-site reste donc uniquement les tags Git SemVer.
+- les évolutions logicielles ou d'infrastructure passent par une branche dédiée,
+  une PR et une review manuelle ;
+- les modifications purement éditoriales peuvent aller directement sur `main`
+  lorsqu'elles ne touchent ni au rendu, ni au CSS, ni au modèle, ni au build ;
+- les versions logicielles publiques viennent des tags Git SemVer sans préfixe
+  `v`, affichés ensuite avec ce préfixe sur le site ;
+- `package.json` n'a pas de champ `version`, afin d'éviter une seconde source de
+  vérité.
 
 ## Build
 
@@ -74,13 +61,12 @@ site reste donc uniquement les tags Git SemVer.
 npm run build
 ```
 
-La sortie statique est produite dans `dist/`. Pendant le build, Vite tente de lire
-la date du dernier commit Git pour afficher la mention `Dernière modification`
-dans le footer. Si les métadonnées Git ne sont pas disponibles, le site reste
-buildable et affiche un fallback explicite. La version logicielle affichée sur la
-page vient du dernier tag SemVer atteignable, par exemple le tag Git `0.2.0`
-affiché comme `v0.2.0`. La révision exacte du build est affichée séparément avec
-le short SHA du commit.
+La sortie statique est produite dans `dist/`. Pendant le build, Vite injecte les
+métadonnées Git publiques utilisées par le footer et le hero : dernière
+modification, version logicielle publiée et révision exacte. Si les métadonnées
+Git ne sont pas disponibles, le site reste buildable et affiche un fallback
+explicite. Le modèle détaillé de version/révision est décrit dans
+[`docs/deployment-workflow.md`](docs/deployment-workflow.md#versioning).
 
 ## Preview
 
@@ -92,8 +78,7 @@ npm run preview
 
 Le fichier `wrangler.jsonc` pointe vers `./dist` et attache le Worker
 `fohryu-website` au domaine racine `fohryu.com` via un Custom Domain Cloudflare.
-Le déploiement de production et les previews de branche sont volontairement
-séparés.
+Les commandes manuelles principales sont :
 
 ```bash
 npm run deploy:production
@@ -101,8 +86,6 @@ npm run deploy:production
 
 Cette commande synchronise les tags Git, build le site puis exécute
 `wrangler deploy`. Elle met à jour le déploiement actif servi sur `fohryu.com`.
-
-Pour produire une preview de branche sans promouvoir le résultat en production :
 
 ```bash
 npm run deploy:preview
@@ -112,19 +95,10 @@ Cette commande synchronise les tags Git, build le site puis exécute
 `wrangler versions upload`. Elle crée une version Cloudflare Workers avec URL de
 preview, sans modifier le déploiement actif de production.
 
-Les commandes internes `cf:deploy:production` et `cf:deploy:preview` exécutent
-uniquement l'étape Wrangler. Elles sont prévues pour Workers Builds lorsque le
-build Cloudflare exécute déjà `npm run build:cloudflare` séparément.
-
-Dans le workflow cible, Workers Builds déclenche automatiquement un build sur
-chaque push vers `main`, qu'il s'agisse d'un merge de PR ou d'un commit éditorial
-direct. Les branches non-production produisent des previews si les builds de
-branches sont activés. Un déploiement manuel de production depuis une branche
-reste possible pour un besoin exceptionnel de démonstration, validation ou test,
-mais ne constitue pas le chemin nominal.
-
-La configuration détaillée du workflow Git, du versioning et des déploiements est
-documentée dans [`docs/deployment-workflow.md`](docs/deployment-workflow.md).
+Les commandes internes `cf:deploy:production`, `cf:deploy:preview` et
+`build:cloudflare` sont prévues pour Workers Builds. Leur rôle exact, le
+déclenchement automatique sur `main` et les previews de branche sont documentés
+dans [`docs/deployment-workflow.md`](docs/deployment-workflow.md#scripts-de-déploiement).
 
 Au premier déploiement, Wrangler crée ou met à jour le Worker `fohryu-website` et
 demande à Cloudflare d'attacher `fohryu.com` à ce Worker. Le domaine `fohryu.com`

@@ -67,39 +67,19 @@ documentation maintenance. If repo-local skills are not auto-discovered, read it
 
 ## Change Workflow
 
-Classify each request before editing:
+Use `docs/deployment-workflow.md` as the source of truth for contribution
+workflow, SemVer tagging and Cloudflare deployment policy.
 
-- Software or infrastructure increments include features, hotfixes, architecture
-  changes, rendering/component changes, styling systems, data model changes,
-  scripts, build configuration, deployment configuration and process changes.
-- Pure editorial updates include text corrections, link updates, content data
-  changes and status changes in existing sections such as `Maintenant`, as long
-  as they do not require rendering, CSS, model, build or infrastructure changes.
+Before editing, classify the request as either:
 
-For software or infrastructure increments, start from the latest commit of the
-default branch. Fetch the remote, fast-forward the local default branch when
-needed, then create a dedicated branch from that commit before editing files.
+- a software or infrastructure increment, which requires a dedicated branch from
+  the latest default-branch commit and a pull request for manual user review;
+- a pure editorial update, which may be committed directly on `main` unless the
+  user asks for a branch or PR.
 
-Use an intent-based branch prefix such as `feature/`, `hotfix/` or `docs/`. Keep
-related work as one or more successive commits on that branch. Open a pull
-request for manual user review and merge. Do not merge pull requests locally or
-remotely unless the user explicitly asks for it.
-
-Pure editorial updates may be committed directly on `main` without a branch or
-pull request, unless the user explicitly asks for a branch/PR. They remain
-versioned by Git, but they are not software increments and must not by themselves
-trigger a new SemVer version.
-
-The application uses SemVer tags on the default branch for software releases.
-Git tag names must use bare SemVer without a leading `v`, for example `0.2.0`
-instead of `v0.2.0`; the site adds the `v` prefix only in the public display.
-During feature work, plan the next minor version; during hotfix work, plan the
-next patch version; for breaking or major shifts, plan the next major version. If
-Git metadata is available, the app displays the latest reachable SemVer tag as
-the software version, for example Git tag `0.2.0` displayed as `v0.2.0`, and the
-current short commit ref as the exact revision. Do not add a root `package.json`
-version as a competing source of truth; this private package uses Git tags for
-public software versioning.
+Do not merge pull requests locally or remotely unless the user explicitly asks
+for it. Do not add a root `package.json` version; public software versioning is
+derived from Git tags as documented in `docs/deployment-workflow.md`.
 
 ## Validation And Git
 
