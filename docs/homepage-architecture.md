@@ -27,6 +27,11 @@ lien d'évitement, le conteneur `#app`, le fallback `noscript` et charge
 `src/main.ts` ajoute la classe `js` au document, récupère `#app`, puis appelle
 `renderApp(root)`.
 
+`vite.config.ts` calcule au build les métadonnées Git publiques injectées dans le
+bundle : URL d'historique des commits et date ISO du dernier commit. Si Git ou
+`.git` n'est pas disponible dans l'environnement de build, la date injectée vaut
+`null` et le rendu affiche un fallback explicite.
+
 `src/render/app.ts` construit l'intégralité de la page en TypeScript avec des
 fonctions de rendu. Le DOM initial est remplacé via `root.replaceChildren(...)`.
 La modale de l'easter egg est ajoutée au même niveau que le contenu principal afin
@@ -45,11 +50,15 @@ Les données éditoriales sont séparées du rendu.
 `src/data/site.ts` contient :
 
 - `navLinks` : liens affichés dans la navigation principale ;
-- `nowItems` : état des chantiers en cours ;
+- `nowItems` : sujets de travail en cours, en pause ou terminés ;
 - `activityItems` : flux d'activité récent, conçu pour accueillir Instagram,
   Journal, YouTube ou GitHub ;
 - `principles` : principes éditoriaux et techniques ;
 - `spaces` : points d'accès publics, prévus ou protégés.
+
+`src/data/build.ts` expose les métadonnées statiques injectées par Vite. Elles ne
+dépendent d'aucun backend et servent uniquement à afficher la date du dernier
+commit Git lorsqu'elle est connue.
 
 `src/data/projects.ts` contient :
 
@@ -121,7 +130,11 @@ Instagram, entrées Journal, vidéos YouTube, commits ou sorties GitHub.
 
 La section `Maintenant` répond à la question : qu'est-ce qui est en cours ? Elle
 affiche les entrées de `nowItems` dans un panneau unique afin de rester synthétique
-et plus temporelle que la cartographie des projets.
+et plus temporelle que la cartographie des projets. Chaque entrée représente un
+sujet de travail et porte un `status` maintenu dans `src/data/site.ts` :
+`active`, `paused` ou `completed`. Le rendu génère automatiquement le libellé et
+la classe visuelle associée ; ajouter ou déplacer un sujet ne demande donc pas de
+modifier `src/render/` ou `src/styles/`.
 
 ### Projets
 
@@ -163,7 +176,10 @@ marqués comme prévus plutôt que présentés comme accessibles.
 
 Le footer reprend la marque, la mention de site expérimental et quelques liens
 externes. Le watermark Ryūko y sert de signature visuelle plus visible que dans le
-hero, tout en restant secondaire par rapport au contenu.
+hero, tout en restant secondaire par rapport au contenu. Il affiche aussi la date
+du dernier commit Git lorsqu'elle est disponible au build, avec un lien vers
+l'historique public des commits. Si les métadonnées Git ne sont pas disponibles,
+le footer garde le lien et indique que la date est indisponible.
 
 ## Easter egg Fury
 
@@ -262,6 +278,13 @@ Pour ajouter une activité récente :
 2. Choisir une source parmi les valeurs prévues par `ActivityItem`.
 3. Renseigner une date machine `datetime` et une date lisible `dateLabel`.
 4. Garder l'extrait court pour que la carte reste scannable.
+
+Pour ajouter ou modifier un sujet `Maintenant` :
+
+1. Mettre à jour une entrée dans `nowItems`.
+2. Utiliser un `id` stable, exposé comme ancre `#now-{id}`.
+3. Choisir `status` parmi `active`, `paused` ou `completed`.
+4. Garder la description courte pour conserver le rôle de synthèse de la section.
 
 Pour ajouter un projet :
 

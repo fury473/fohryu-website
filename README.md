@@ -40,7 +40,10 @@ consignes destinées aux agents de maintenance, voir [`AGENTS.md`](AGENTS.md).
 npm run build
 ```
 
-La sortie statique est produite dans `dist/`.
+La sortie statique est produite dans `dist/`. Pendant le build, Vite tente de lire
+la date du dernier commit Git pour l'afficher dans le footer avec un lien vers
+l'historique public des commits. Si les métadonnées Git ne sont pas disponibles,
+le site reste buildable et affiche un fallback explicite.
 
 ## Preview
 

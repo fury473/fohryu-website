@@ -5,10 +5,12 @@ import {
   visibilityLabels,
   type Project
 } from "../data/projects";
+import { buildMetadata } from "../data/build";
 import {
   activityItems,
   navLinks,
   nowItems,
+  nowStatusLabels,
   principles,
   spaces,
   type ActivityItem,
@@ -192,7 +194,13 @@ function renderNow(): HTMLElement {
           className: "now-list",
           children: nowItems.map((item) =>
             el("li", {
+              className: `now-item now-item--${item.status}`,
+              attrs: { id: `now-${item.id}` },
               children: [
+                el("div", {
+                  className: "now-item__meta",
+                  children: [el("span", { className: "now-status", text: nowStatusLabels[item.status] })]
+                }),
                 el("h3", { text: item.title }),
                 el("p", { text: item.description })
               ]
@@ -482,7 +490,8 @@ function renderFooter(): HTMLElement {
                   el("strong", { text: "Fohryu Works" }),
                   el("p", {
                     text: `© ${year}. Site expérimental, statique, et volontairement en évolution.`
-                  })
+                  }),
+                  renderBuildMetadata()
                 ]
               })
             ]
@@ -500,6 +509,44 @@ function renderFooter(): HTMLElement {
       })
     ]
   });
+}
+
+function renderBuildMetadata(): HTMLElement {
+  const formattedDate = formatCommitDate(buildMetadata.lastCommitDate);
+
+  return el("p", {
+    className: `footer-build${formattedDate ? "" : " footer-build--fallback"}`,
+    children: [
+      "Dernier commit Git : ",
+      formattedDate && buildMetadata.lastCommitDate
+        ? el("time", {
+            text: formattedDate,
+            attrs: { datetime: buildMetadata.lastCommitDate }
+          })
+        : el("span", { text: "date indisponible" }),
+      " - ",
+      link("historique public", buildMetadata.commitsUrl, "footer-build__link")
+    ]
+  });
+}
+
+function formatCommitDate(dateIso: string | null): string | null {
+  if (!dateIso) {
+    return null;
+  }
+
+  const date = new Date(dateIso);
+
+  if (Number.isNaN(date.getTime())) {
+    return null;
+  }
+
+  return new Intl.DateTimeFormat("fr-FR", {
+    day: "numeric",
+    month: "long",
+    timeZone: "Europe/Paris",
+    year: "numeric"
+  }).format(date);
 }
 
 function renderFuryOriginModal(): HTMLElement {

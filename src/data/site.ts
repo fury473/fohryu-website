@@ -1,7 +1,10 @@
+export type NowStatus = "active" | "paused" | "completed";
+
 export type NowItem = {
   id: string;
   title: string;
   description: string;
+  status: NowStatus;
 };
 
 export type Principle = {
@@ -38,38 +41,50 @@ export const navLinks = [
   { label: "Explorations", href: "#project-explorations-ai" }
 ] as const;
 
+export const nowStatusLabels: Record<NowStatus, string> = {
+  active: "Actif",
+  paused: "En pause",
+  completed: "Terminé"
+};
+
 export const nowItems: NowItem[] = [
   {
     id: "fohryu-com",
     title: "Construction de fohryu.com",
-    description: "Une première porte d'entrée publique, statique et facile à faire évoluer."
+    description: "Une première porte d'entrée publique, statique et facile à faire évoluer.",
+    status: "active"
   },
   {
     id: "journal",
     title: "Journal quotidien assisté par IA",
-    description: "Transformer les expériences et décisions du quotidien en mémoire structurée."
+    description: "Transformer les expériences et décisions du quotidien en mémoire structurée.",
+    status: "active"
   },
   {
     id: "youtube-refresh",
     title: "Mise à jour de la chaîne YouTube",
     description:
-      "Faire le ménage, clarifier le branding, retravailler la description, préparer l'intro et poser les premières vidéos de contenu."
+      "Faire le ménage, clarifier le branding, retravailler la description, préparer l'intro et poser les premières vidéos de contenu.",
+    status: "paused"
   },
   {
     id: "moving-ai",
     title: "Explorations en mouvement",
-    description: "Marcher, courir, observer et dialoguer avec une IA comme compagnon de route."
+    description: "Marcher, courir, observer et dialoguer avec une IA comme compagnon de route.",
+    status: "active"
   },
   {
     id: "stream-cohost",
     title: "AI co-host pour le streaming",
-    description: "Préparer une présence IA capable d'accompagner le direct et son audience."
+    description: "Préparer une présence IA capable d'accompagner le direct et son audience.",
+    status: "paused"
   },
   {
     id: "hub-structure",
     title: "Structuration du Hub",
     description:
-      "Consolider un espace privé où je documente mes idées de manière détaillée. Une version publique viendra en cours de route, le temps de stabiliser mes priorités."
+      "Consolider un espace privé où je documente mes idées de manière détaillée. Une version publique viendra en cours de route, le temps de stabiliser mes priorités.",
+    status: "active"
   }
 ];
 
