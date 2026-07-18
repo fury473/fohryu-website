@@ -137,7 +137,8 @@ la classe visuelle associée ; ajouter ou déplacer un sujet ne demande donc pas
 modifier `src/render/` ou `src/styles/`. Les sujets actifs utilisent l'état le
 plus visible, avec une bordure animée lorsque les préférences de mouvement le
 permettent ; les sujets en pause et terminés gardent des couleurs distinctes plus
-discrètes.
+discrètes. Une légende générée depuis `nowStatusOrder` rend les trois états
+visibles même si aucun sujet actuel n'utilise encore l'un d'eux.
 
 ### Projets
 

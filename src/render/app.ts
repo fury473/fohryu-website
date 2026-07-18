@@ -11,6 +11,7 @@ import {
   navLinks,
   nowItems,
   nowStatusLabels,
+  nowStatusOrder,
   principles,
   spaces,
   type ActivityItem,
@@ -184,9 +185,23 @@ function renderNow(): HTMLElement {
           className: "now-panel__lead",
           children: [
             el("span", { className: "signal-dot", attrs: { "aria-hidden": "true" } }),
-            el("p", {
-              text:
-                "La réponse courte à la question : qu'est-ce que Fury construit actuellement ?"
+            el("div", {
+              className: "now-panel__lead-copy",
+              children: [
+                el("p", {
+                  text:
+                    "La réponse courte à la question : qu'est-ce que Fury construit actuellement ?"
+                }),
+                el("ul", {
+                  className: "now-status-legend",
+                  attrs: { "aria-label": "États des sujets de travail" },
+                  children: nowStatusOrder.map((status) =>
+                    el("li", {
+                      children: [renderNowStatus(status)]
+                    })
+                  )
+                })
+              ]
             })
           ]
         }),
@@ -199,18 +214,7 @@ function renderNow(): HTMLElement {
               children: [
                 el("div", {
                   className: "now-item__meta",
-                  children: [
-                    el("span", {
-                      className: "now-status",
-                      children: [
-                        el("span", {
-                          className: "now-status__mark",
-                          attrs: { "aria-hidden": "true" }
-                        }),
-                        nowStatusLabels[item.status]
-                      ]
-                    })
-                  ]
+                  children: [renderNowStatus(item.status)]
                 }),
                 el("h3", { text: item.title }),
                 el("p", { text: item.description })
@@ -221,6 +225,19 @@ function renderNow(): HTMLElement {
       ]
     })
   ]);
+}
+
+function renderNowStatus(status: keyof typeof nowStatusLabels): HTMLElement {
+  return el("span", {
+    className: `now-status now-status--${status}`,
+    children: [
+      el("span", {
+        className: "now-status__mark",
+        attrs: { "aria-hidden": "true" }
+      }),
+      nowStatusLabels[status]
+    ]
+  });
 }
 
 function renderActivity(): HTMLElement {

@@ -13,6 +13,7 @@
   --soft: #8e817b;
   --accent: #ff5a67;
   --accent-2: #ffb36a;
+  --active: #7fd4ff;
   --signal: #7fd4ff;
   --usable: #91d37b;
   --planned: #c8b6ff;
@@ -461,10 +462,24 @@ p {
   align-items: flex-start;
 }
 
-.now-panel__lead p {
+.now-panel__lead-copy {
+  display: grid;
+  gap: 1rem;
+}
+
+.now-panel__lead-copy p {
   margin: 0;
   color: var(--text);
   font-size: 1.1rem;
+}
+
+.now-status-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
 }
 
 .signal-dot {
@@ -513,15 +528,13 @@ p {
   flex-direction: column;
   min-height: 10rem;
   overflow: hidden;
-  --now-accent: var(--signal);
+  --now-accent: var(--active);
   --now-accent-rgb: 127, 212, 255;
-  --now-border: rgba(127, 212, 255, 0.46);
-  --now-glow: rgba(127, 212, 255, 0.16);
-  --now-status-bg: rgba(127, 212, 255, 0.14);
-  --now-status-border: rgba(127, 212, 255, 0.44);
-  --now-status-text: #d6f4ff;
+  --now-border: rgba(127, 212, 255, 0.72);
+  --now-glow: rgba(127, 212, 255, 0.3);
   background:
-    linear-gradient(135deg, rgba(var(--now-accent-rgb), 0.11), transparent 48%),
+    radial-gradient(circle at 15% 0%, rgba(var(--now-accent-rgb), 0.2), transparent 34%),
+    linear-gradient(135deg, rgba(var(--now-accent-rgb), 0.13), transparent 52%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.045), transparent),
     rgba(255, 255, 255, 0.035);
   border-color: var(--now-border);
@@ -529,6 +542,10 @@ p {
     inset 0 1px 0 rgba(255, 255, 255, 0.055),
     0 12px 34px rgba(0, 0, 0, 0.16);
   isolation: isolate;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
 }
 
 .now-list li::before {
@@ -538,8 +555,9 @@ p {
   width: 3px;
   height: 100%;
   content: "";
-  background: linear-gradient(180deg, var(--now-accent), transparent);
-  opacity: 0.7;
+  background:
+    linear-gradient(180deg, var(--now-accent), rgba(var(--now-accent-rgb), 0.34), transparent);
+  opacity: 0.95;
 }
 
 .now-list li::after {
@@ -552,36 +570,50 @@ p {
 }
 
 .now-item--active {
-  --now-border: rgba(127, 212, 255, 0.66);
-  --now-glow: rgba(127, 212, 255, 0.26);
+  --now-accent: var(--active);
+  --now-accent-rgb: 127, 212, 255;
+  --now-border: rgba(127, 212, 255, 0.78);
+  --now-glow: rgba(127, 212, 255, 0.34);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 0 0 1px rgba(127, 212, 255, 0.08),
-    0 18px 48px rgba(0, 0, 0, 0.22),
-    0 0 30px rgba(127, 212, 255, 0.11);
+    0 0 0 1px rgba(127, 212, 255, 0.2),
+    0 18px 54px rgba(0, 0, 0, 0.28),
+    0 0 36px rgba(127, 212, 255, 0.18);
 }
 
 .now-item--active::after {
-  border-color: rgba(127, 212, 255, 0.48);
-  box-shadow: inset 0 0 18px rgba(127, 212, 255, 0.1);
+  border-color: rgba(127, 212, 255, 0.7);
+  box-shadow:
+    inset 0 0 20px rgba(127, 212, 255, 0.13),
+    0 0 22px rgba(127, 212, 255, 0.12);
 }
 
 .now-item--paused {
   --now-accent: var(--paused);
   --now-accent-rgb: 255, 179, 106;
-  --now-border: rgba(255, 179, 106, 0.38);
-  --now-status-bg: rgba(255, 179, 106, 0.12);
-  --now-status-border: rgba(255, 179, 106, 0.36);
-  --now-status-text: #ffe1bf;
+  --now-border: rgba(255, 179, 106, 0.58);
+  --now-glow: rgba(255, 179, 106, 0.2);
+  background:
+    repeating-linear-gradient(
+      135deg,
+      rgba(255, 179, 106, 0.07) 0,
+      rgba(255, 179, 106, 0.07) 1px,
+      transparent 1px,
+      transparent 12px
+    ),
+    radial-gradient(circle at 15% 0%, rgba(255, 179, 106, 0.14), transparent 34%),
+    rgba(255, 255, 255, 0.035);
 }
 
 .now-item--completed {
   --now-accent: var(--completed);
   --now-accent-rgb: 143, 230, 165;
-  --now-border: rgba(143, 230, 165, 0.34);
-  --now-status-bg: rgba(143, 230, 165, 0.11);
-  --now-status-border: rgba(143, 230, 165, 0.32);
-  --now-status-text: #d6f7df;
+  --now-border: rgba(143, 230, 165, 0.54);
+  --now-glow: rgba(143, 230, 165, 0.18);
+  background:
+    linear-gradient(135deg, rgba(143, 230, 165, 0.12), transparent 46%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent),
+    rgba(255, 255, 255, 0.03);
 }
 
 .now-item__meta {
@@ -596,24 +628,55 @@ p {
   align-items: center;
   gap: 0.42rem;
   width: fit-content;
-  min-height: 1.65rem;
-  padding: 0 0.58rem 0 0.48rem;
-  color: var(--now-status-text);
+  min-height: 1.9rem;
+  padding: 0 0.66rem 0 0.52rem;
+  --now-accent: var(--active);
+  --now-accent-rgb: 127, 212, 255;
+  --now-glow: rgba(127, 212, 255, 0.3);
+  color: #d6f4ff;
   font-size: 0.72rem;
   font-weight: 760;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  background: var(--now-status-bg);
-  border: 1px solid var(--now-status-border);
+  background:
+    linear-gradient(180deg, rgba(var(--now-accent-rgb), 0.17), rgba(var(--now-accent-rgb), 0.07)),
+    rgba(9, 7, 6, 0.38);
+  border: 1px solid rgba(var(--now-accent-rgb), 0.48);
   border-radius: 999px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 0 18px rgba(var(--now-accent-rgb), 0.08);
+}
+
+.now-status--active {
+  --now-accent: var(--active);
+  --now-accent-rgb: 127, 212, 255;
+  --now-glow: rgba(127, 212, 255, 0.34);
+  color: #d6f4ff;
+}
+
+.now-status--paused {
+  --now-accent: var(--paused);
+  --now-accent-rgb: 255, 179, 106;
+  --now-glow: rgba(255, 179, 106, 0.22);
+  color: #ffe1bf;
+}
+
+.now-status--completed {
+  --now-accent: var(--completed);
+  --now-accent-rgb: 143, 230, 165;
+  --now-glow: rgba(143, 230, 165, 0.2);
+  color: #d6f7df;
 }
 
 .now-status__mark {
-  width: 0.48rem;
-  height: 0.48rem;
+  width: 0.56rem;
+  height: 0.56rem;
   background: var(--now-accent);
   border-radius: 999px;
-  box-shadow: 0 0 14px var(--now-glow);
+  box-shadow:
+    0 0 0 3px rgba(var(--now-accent-rgb), 0.1),
+    0 0 16px var(--now-glow);
 }
 
 .now-list h3,
@@ -1214,6 +1277,10 @@ p {
   .now-item--active::after {
     animation: now-active-border 2600ms ease-in-out infinite;
   }
+
+  .now-status--active .now-status__mark {
+    animation: now-status-pulse 1800ms ease-in-out infinite;
+  }
 }
 
 @keyframes signal-pulse {
@@ -1242,6 +1309,21 @@ p {
     box-shadow:
       inset 0 0 22px rgba(127, 212, 255, 0.16),
       0 0 24px rgba(127, 212, 255, 0.2);
+  }
+}
+
+@keyframes now-status-pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 3px rgba(127, 212, 255, 0.1),
+      0 0 14px rgba(127, 212, 255, 0.24);
+  }
+
+  50% {
+    box-shadow:
+      0 0 0 5px rgba(127, 212, 255, 0.16),
+      0 0 24px rgba(127, 212, 255, 0.44);
   }
 }
 

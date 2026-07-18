@@ -47,6 +47,8 @@ export const nowStatusLabels: Record<NowStatus, string> = {
   completed: "Terminé"
 };
 
+export const nowStatusOrder: NowStatus[] = ["active", "paused", "completed"];
+
 export const nowItems: NowItem[] = [
   {
     id: "fohryu-com",
