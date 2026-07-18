@@ -254,16 +254,23 @@ Impacts attendus :
 Étapes de mise en œuvre après validation :
 
 1. merger la PR ;
-2. ouvrir le dashboard Cloudflare sur le Worker `fohryu-website` ;
-3. connecter le dépôt GitHub `fury473/fohryu-website` à Workers Builds ;
-4. configurer la branche de production sur `main` ;
-5. renseigner les commandes Workers Builds listées ci-dessus ;
-6. activer les builds de branches non-production ;
-7. vérifier qu'une PR reçoit bien un commentaire Cloudflare avec une URL de
+2. synchroniser `main` localement avec le commit mergé ;
+3. poser sur ce commit le tag Git SemVer réel sans préfixe `v`, par exemple
+   `0.3.0` ;
+4. pousser ce tag vers GitHub ;
+5. ouvrir le dashboard Cloudflare sur le Worker `fohryu-website` ;
+6. connecter le dépôt GitHub `fury473/fohryu-website` à Workers Builds ;
+7. configurer la branche de production sur `main` ;
+8. renseigner les commandes Workers Builds listées ci-dessus ;
+9. activer les builds de branches non-production ;
+10. déclencher ou relancer un premier build production depuis `main`, après
+    synchronisation du tag, afin que la version affichée corresponde au dernier
+    tag SemVer publié ;
+11. vérifier qu'une PR reçoit bien un commentaire Cloudflare avec une URL de
    preview ;
-8. vérifier qu'un push/merge sur `main` met à jour le déploiement actif attendu.
-9. vérifier qu'un commit éditorial direct sur `main` déclenche aussi un
-   déploiement de production.
+12. vérifier qu'un push/merge sur `main` met à jour le déploiement actif attendu ;
+13. vérifier qu'un commit éditorial direct sur `main` déclenche aussi un
+    déploiement de production.
 
 Retour arrière :
 
