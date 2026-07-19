@@ -1,4 +1,4 @@
-export type NowStatus = "active" | "next" | "completed";
+export type NowStatus = "active" | "next";
 
 export type NowItem = {
   id: string;
@@ -22,12 +22,13 @@ export type Space = {
 
 export type ActivityItem = {
   id: string;
-  source: "Instagram" | "Journal" | "YouTube" | "GitHub";
+  source: "Fohryu" | "Instagram" | "Journal" | "YouTube" | "GitHub";
   title: string;
   dateLabel: string;
   datetime: string;
   body: string[];
   url: string;
+  ctaLabel?: string;
   thumbnail?: {
     src: string;
     alt: string;
@@ -43,11 +44,10 @@ export const navLinks = [
 
 export const nowStatusLabels: Record<NowStatus, string> = {
   active: "Actif",
-  next: "À suivre",
-  completed: "Terminé"
+  next: "À suivre"
 };
 
-export const nowStatusOrder: NowStatus[] = ["active", "next", "completed"];
+export const nowStatusOrder: NowStatus[] = ["active", "next"];
 
 export const nowItems: NowItem[] = [
   {
@@ -94,17 +94,23 @@ export const nowItems: NowItem[] = [
     title: "AI co-host pour le streaming",
     description: "Préparer une présence IA capable d'accompagner le direct et son audience.",
     status: "next"
-  },
-  {
-    id: "fohryu-com-launch",
-    title: "Lancement de fohryu.com",
-    description:
-      "La première porte d'entrée publique est en ligne : statique, sobre et facile à faire évoluer.",
-    status: "completed"
   }
 ];
 
 export const activityItems: ActivityItem[] = [
+  {
+    id: "fohryu-com-launch",
+    source: "Fohryu",
+    title: "Lancement de fohryu.com",
+    dateLabel: "15 juillet 2026",
+    datetime: "2026-07-15",
+    body: [
+      "La première porte d'entrée publique de Fohryu Works est en ligne : statique, sobre et facile à faire évoluer.",
+      "Ce jalon marque la fin de la construction initiale et ouvre la suite : maintenance, contenus et nouveaux projets."
+    ],
+    url: "#top",
+    ctaLabel: "Voir le site"
+  },
   {
     id: "instagram-urban-exploration",
     source: "Instagram",

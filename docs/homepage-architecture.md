@@ -56,9 +56,9 @@ Les données éditoriales sont séparées du rendu.
 `src/data/site.ts` contient :
 
 - `navLinks` : liens affichés dans la navigation principale ;
-- `nowItems` : sujets de travail actifs, à suivre ou terminés ;
-- `activityItems` : flux d'activité récent, conçu pour accueillir Instagram,
-  Journal, YouTube ou GitHub ;
+- `nowItems` : sujets de travail actifs ou à suivre ;
+- `activityItems` : flux d'activité récent, conçu pour accueillir Fohryu,
+  Instagram, Journal, YouTube ou GitHub ;
 - `principles` : principes éditoriaux et techniques ;
 - `spaces` : points d'accès publics, prévus ou protégés.
 
@@ -130,10 +130,14 @@ chaîne éditoriale.
 
 La section `Récemment` est un flux d'activité natif au site. Elle n'utilise pas le
 widget officiel Instagram. Chaque entrée est une carte éditoriale issue de
-`activityItems`, avec source, date, titre, extrait et lien externe.
+`activityItems`, avec source, date, titre, extrait et lien. Les cartes sont
+affichées en grille de deux colonnes sur les écrans suffisamment larges, puis en
+colonne unique sur mobile.
 
 La structure est prévue pour évoluer vers un flux plus large : publications
-Instagram, entrées Journal, vidéos YouTube, commits ou sorties GitHub.
+Fohryu, publications Instagram, entrées Journal, vidéos YouTube, commits ou
+sorties GitHub. Les jalons terminés qui ne sont plus des sujets de travail en
+cours doivent être déplacés ici plutôt que conservés dans `Maintenant`.
 
 ### Maintenant
 
@@ -141,14 +145,13 @@ La section `Maintenant` répond à la question : qu'est-ce qui est en cours ? El
 affiche les entrées de `nowItems` dans un panneau unique afin de rester synthétique
 et plus temporelle que la cartographie des projets. Chaque entrée représente un
 sujet de travail et porte un `status` maintenu dans `src/data/site.ts` :
-`active`, `next` ou `completed`. Le rendu génère automatiquement le libellé et
+`active` ou `next`. Le rendu génère automatiquement le libellé et
 la classe visuelle associée ; ajouter ou déplacer un sujet ne demande donc pas de
 modifier `src/render/` ou `src/styles/`. La couleur de chaque bloc reflète son
-statut complet. Les sujets actifs utilisent l'état le plus visible, avec une
+statut. Les sujets actifs utilisent l'état le plus visible, avec une
 bordure extérieure animée lorsque les préférences de mouvement le permettent ; les
-sujets à suivre et terminés gardent des couleurs distinctes plus discrètes. Une
-légende générée depuis `nowStatusOrder` rend les trois états visibles même si aucun
-sujet actuel n'utilise encore l'un d'eux.
+sujets à suivre gardent une couleur distincte plus discrète. Une légende générée
+depuis `nowStatusOrder` rend les états visibles.
 
 ### Projets
 
@@ -262,7 +265,7 @@ Les tokens CSS sont déclarés dans `:root` :
 - bordures : `--line`, `--line-strong`, `--line-warm` ;
 - texte : `--text`, `--muted`, `--soft` ;
 - accents : `--accent`, `--accent-2`, `--signal` ;
-- états : `--usable`, `--planned`, `--next`, `--completed` ;
+- états : `--active`, `--usable`, `--planned`, `--next` ;
 - dimensions partagées : `--radius`, `--max-width`, `--shadow`.
 
 Le fond de page combine une grille très légère et des halos chauds. Les sections
@@ -293,13 +296,14 @@ Pour ajouter une activité récente :
 1. Ajouter une entrée dans `activityItems`.
 2. Choisir une source parmi les valeurs prévues par `ActivityItem`.
 3. Renseigner une date machine `datetime` et une date lisible `dateLabel`.
-4. Garder l'extrait court pour que la carte reste scannable.
+4. Optionnellement renseigner `ctaLabel` si le libellé par défaut ne convient pas.
+5. Garder l'extrait court pour que la carte reste scannable.
 
 Pour ajouter ou modifier un sujet `Maintenant` :
 
 1. Mettre à jour une entrée dans `nowItems`.
 2. Utiliser un `id` stable, exposé comme ancre `#now-{id}`.
-3. Choisir `status` parmi `active`, `next` ou `completed`.
+3. Choisir `status` parmi `active` ou `next`.
 4. Garder la description courte pour conserver le rôle de synthèse de la section.
 
 Pour ajouter un projet :
