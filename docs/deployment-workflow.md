@@ -53,6 +53,17 @@ Ces changements utilisent le workflow complet :
 5. ouvrir une PR ;
 6. laisser la review et le merge au propriétaire du dépôt.
 
+La demande de réaliser une évolution logicielle ou d'infrastructure autorise
+l'ensemble de ce workflow. Aucune validation intermédiaire supplémentaire n'est
+requise avant de créer la branche, produire les commits, pousser la branche ou
+ouvrir la PR. La PR constitue le point de validation humaine avant le merge. Un
+push sur une branche non-production peut déclencher automatiquement une preview
+publique Cloudflare.
+
+Le merge, la création ou le push d'un tag, le déploiement manuel en production,
+le force-push et la réécriture d'historique nécessitent toujours une demande
+explicite.
+
 Les modifications purement éditoriales peuvent être faites directement sur
 `main`, sans branche ni PR. Cela couvre par exemple :
 
@@ -60,6 +71,9 @@ Les modifications purement éditoriales peuvent être faites directement sur
 - mise à jour d'un lien ;
 - mise à jour d'une donnée de contenu ;
 - changement d'état dans une entrée existante de la section `Maintenant`.
+
+Comme un push direct sur `main` déclenche un déploiement automatique en
+production, ce push reste soumis à une demande explicite.
 
 Une modification éditoriale cesse d'être purement éditoriale dès qu'elle demande
 de toucher au rendu, au CSS, aux types, au modèle de données, au build ou à

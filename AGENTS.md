@@ -32,6 +32,10 @@ visual architecture live in `docs/homepage-architecture.md`.
 - Do not create secrets, tokens, `.dev.vars` or credential files.
 - Do not modify `.gitignore` in a way that causes build output, dependencies or
   secrets to be tracked.
+- Prefer the repository's existing tools and connected integrations. Do not
+  install GitHub CLI (`gh`) or another auxiliary tool merely to satisfy a
+  workflow convention. Propose an installation only for a concrete need,
+  explain that need and obtain explicit user approval first.
 
 ## Visual And Accessibility Direction
 
@@ -77,6 +81,12 @@ Before editing, classify the request as either:
 - a pure editorial update, which may be committed directly on `main` unless the
   user asks for a branch or PR.
 
+For a software or infrastructure increment, the request authorizes the complete
+contribution workflow: create the branch, commit, push and open the pull request
+without asking for separate confirmation at each step. Treat the pull request as
+the user's review point. A non-production branch push may trigger a public
+Cloudflare preview.
+
 Do not merge pull requests locally or remotely unless the user explicitly asks
 for it. Do not add a root `package.json` version; public software versioning is
 derived from Git tags as documented in `docs/deployment-workflow.md`.
@@ -95,5 +105,6 @@ For documentation-only changes, `git diff --check` is usually enough.
 Commit from this repository, not from the parent `hub` repository. Stage only
 files that belong to this project, and do not stage unrelated user changes.
 
-Do not deploy to Cloudflare, push, force-push or rewrite history unless the user
+Do not push directly to `main`, merge a pull request, create or push a tag,
+deploy manually to production, force-push or rewrite history unless the user
 explicitly asks for it.
