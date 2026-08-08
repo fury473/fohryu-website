@@ -11,6 +11,15 @@ submodule.
 Operational commands live in `README.md`. Page composition, section ownership and
 visual architecture live in `docs/homepage-architecture.md`.
 
+## Execution Environment
+
+- Run repository-scoped CLI operations through WSL by default, including file
+  inspection and search, Git, Node, npm and project scripts.
+- Use `/mnt/x/hub/projects/fohryu-website` as the repository path in WSL, even
+  when the agent itself is hosted from Windows.
+- Use PowerShell or other Windows commands only for host-side actions or tools
+  that specifically require Windows.
+
 ## Non-Negotiables
 
 - Use `Fury` as the default public identity.
