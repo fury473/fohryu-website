@@ -17,9 +17,23 @@ description: Maintain the Fohryu Website public homepage. Use when updating fohr
 Do not copy rules from those files into this skill. This skill is the workflow
 entry point; the other files remain the source of truth.
 
+## Execution Environment
+
+- Treat WSL as the primary runtime for this repository.
+- Run Git, Node, npm and project scripts from `/mnt/x/hub/projects/fohryu-website`.
+- From a Windows-hosted shell, use
+  `wsl.exe -e bash -lc "cd /mnt/x/hub/projects/fohryu-website && <command>"`.
+- Prefer WSL Git so repository ownership, SSH configuration and remote access
+  remain consistent.
+- Treat GitHub CLI (`gh`) as optional. Prefer an available GitHub integration
+  for pull request operations, and install no auxiliary CLI without a concrete,
+  explained need and explicit user approval.
+- Use PowerShell only for host-side tasks or tools that specifically require
+  Windows.
+
 ## Workflow
 
-1. Run `git status --short`.
+1. Run `git status --short` through WSL.
 2. Classify the request: content, rendering, styling, asset, documentation,
    deployment or a mix.
 3. Edit the owning file group:
@@ -35,7 +49,24 @@ entry point; the other files remain the source of truth.
 5. Run `git diff --check`.
 6. Run `npm run build` for TypeScript, rendering, style, asset or dependency
    changes.
-7. Commit, push, deploy or rewrite history only after an explicit user request.
+7. For software or infrastructure work, create the branch, commit, push and open
+   the pull request without requesting separate confirmation. Use Draft only
+   when the intended scope is knowingly incomplete or blocked; otherwise open it
+   as Ready for review. Stop before merge.
+8. Apply relevant existing labels and assign the user to the pull request.
+   Request the user as reviewer only when a distinct automation identity, such
+   as a GitHub App, created the pull request. When the user's own account created
+   it, do not attempt self-review; preserve the explicit merge decision as the
+   manual review point.
+9. After pushing any additional commit to an open pull request, reassess its
+   title, description, validation notes, labels and Draft status. Update them
+   without requesting confirmation, and mark the pull request Ready for review
+   when its intended scope is complete and no known blocker remains. Ready for
+   review does not authorize merge.
+10. For pure editorial work on `main`, require an explicit request before commit
+   and push because the push deploys to production.
+11. Require an explicit request before merging, creating or pushing a tag,
+   deploying manually to production, force-pushing or rewriting history.
 
 ## Maintenance Heuristics
 

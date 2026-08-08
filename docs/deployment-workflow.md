@@ -53,6 +53,40 @@ Ces changements utilisent le workflow complet :
 5. ouvrir une PR ;
 6. laisser la review et le merge au propriétaire du dépôt.
 
+La demande de réaliser une évolution logicielle ou d'infrastructure autorise
+l'ensemble de ce workflow. Aucune validation intermédiaire supplémentaire n'est
+requise avant de créer la branche, produire les commits, pousser la branche ou
+ouvrir la PR. La PR constitue le point de validation humaine avant le merge. Un
+push sur une branche non-production peut déclencher automatiquement une preview
+publique Cloudflare.
+
+Une PR doit être créée en Draft uniquement lorsque son périmètre actuel est
+sciemment incomplet ou qu'un blocage connu empêche sa review. Si le changement
+prévu est cohérent, validé de façon proportionnée et sans blocage connu, la PR
+doit être créée directement en Ready for review. Ce statut indique seulement que
+la PR peut être reviewée et éventuellement mergée ; il n'autorise jamais le
+merge.
+
+Lors de la création, assigner le propriétaire du dépôt à la PR et appliquer les
+labels existants correspondant au changement, par exemple `bug`, `documentation`
+ou `enhancement`. Demander sa review uniquement lorsque la PR a été créée par une
+identité d'automatisation distincte, telle qu'une GitHub App. Lorsque la PR est
+créée sous le propre compte du propriétaire, ne pas tenter d'auto-review :
+l'assignation et la décision explicite de merge constituent le point de contrôle
+manuel.
+
+Après chaque commit supplémentaire poussé sur une PR ouverte, réévaluer son
+titre, sa description, la liste des validations, ses labels et son statut Draft.
+Mettre ces métadonnées à jour si le nouveau périmètre, les nouveaux fichiers ou
+les nouvelles vérifications ne sont plus décrits fidèlement. Passer la PR en
+Ready for review dès que son périmètre prévu est complet et sans blocage connu.
+Cette maintenance de la PR ne demande aucune validation utilisateur
+supplémentaire ; l'historique des éditions GitHub en conserve la traçabilité.
+
+Le merge, la création ou le push d'un tag, le déploiement manuel en production,
+le force-push et la réécriture d'historique nécessitent toujours une demande
+explicite.
+
 Les modifications purement éditoriales peuvent être faites directement sur
 `main`, sans branche ni PR. Cela couvre par exemple :
 
@@ -60,6 +94,9 @@ Les modifications purement éditoriales peuvent être faites directement sur
 - mise à jour d'un lien ;
 - mise à jour d'une donnée de contenu ;
 - changement d'état dans une entrée existante de la section `Maintenant`.
+
+Comme un push direct sur `main` déclenche un déploiement automatique en
+production, ce push reste soumis à une demande explicite.
 
 Une modification éditoriale cesse d'être purement éditoriale dès qu'elle demande
 de toucher au rendu, au CSS, aux types, au modèle de données, au build ou à

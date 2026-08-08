@@ -11,6 +11,15 @@ submodule.
 Operational commands live in `README.md`. Page composition, section ownership and
 visual architecture live in `docs/homepage-architecture.md`.
 
+## Execution Environment
+
+- Run repository-scoped CLI operations through WSL by default, including file
+  inspection and search, Git, Node, npm and project scripts.
+- Use `/mnt/x/hub/projects/fohryu-website` as the repository path in WSL, even
+  when the agent itself is hosted from Windows.
+- Use PowerShell or other Windows commands only for host-side actions or tools
+  that specifically require Windows.
+
 ## Non-Negotiables
 
 - Use `Fury` as the default public identity.
@@ -32,6 +41,10 @@ visual architecture live in `docs/homepage-architecture.md`.
 - Do not create secrets, tokens, `.dev.vars` or credential files.
 - Do not modify `.gitignore` in a way that causes build output, dependencies or
   secrets to be tracked.
+- Prefer the repository's existing tools and connected integrations. Do not
+  install GitHub CLI (`gh`) or another auxiliary tool merely to satisfy a
+  workflow convention. Propose an installation only for a concrete need,
+  explain that need and obtain explicit user approval first.
 
 ## Visual And Accessibility Direction
 
@@ -77,6 +90,28 @@ Before editing, classify the request as either:
 - a pure editorial update, which may be committed directly on `main` unless the
   user asks for a branch or PR.
 
+For a software or infrastructure increment, the request authorizes the complete
+contribution workflow: create the branch, commit, push and open the pull request
+without asking for separate confirmation at each step. Treat the pull request as
+the user's review point. A non-production branch push may trigger a public
+Cloudflare preview.
+
+Create a pull request as Draft only when its current scope is knowingly
+incomplete or has a known blocker. Otherwise create it as Ready for review.
+Apply the relevant existing labels for the change type and assign the repository
+owner to the pull request.
+
+When additional commits are added to an open pull request, reassess its title,
+description, validation notes, labels and Draft status. Update that metadata and
+mark the pull request Ready for review without separate user confirmation once
+its intended scope is complete and no known blocker remains. GitHub's edit
+history preserves traceability. Ready for review never authorizes merging.
+
+Request the repository owner as reviewer only when the pull request was created
+by a distinct automation identity, such as a GitHub App. When the pull request is
+created under the owner's own account, do not attempt self-review; keep the owner
+assigned and leave the explicit merge decision as the manual review point.
+
 Do not merge pull requests locally or remotely unless the user explicitly asks
 for it. Do not add a root `package.json` version; public software versioning is
 derived from Git tags as documented in `docs/deployment-workflow.md`.
@@ -95,5 +130,6 @@ For documentation-only changes, `git diff --check` is usually enough.
 Commit from this repository, not from the parent `hub` repository. Stage only
 files that belong to this project, and do not stage unrelated user changes.
 
-Do not deploy to Cloudflare, push, force-push or rewrite history unless the user
+Do not push directly to `main`, merge a pull request, create or push a tag,
+deploy manually to production, force-push or rewrite history unless the user
 explicitly asks for it.

@@ -10,6 +10,17 @@ Première version statique de la page d'accueil publique de `fohryu.com`.
 - CSS custom, sans framework UI
 - Assets statiques dans `public/`
 
+## Environnement d'exécution
+
+Les commandes de ce README sont prévues pour être exécutées sous WSL depuis :
+
+```bash
+cd /mnt/x/hub/projects/fohryu-website
+```
+
+PowerShell reste pertinent pour les actions côté hôte ou les outils qui exigent
+spécifiquement Windows, mais pas comme shell par défaut pour manipuler ce dépôt.
+
 ## Installation
 
 ```bash
