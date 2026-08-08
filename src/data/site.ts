@@ -53,7 +53,25 @@ export const nowItems: NowItem[] = [
   {
     id: "journal",
     title: "Journal quotidien assisté par IA",
-    description: "Transformer les expériences et décisions du quotidien en mémoire structurée.",
+    description: "Utiliser ChatGPT au quotidien, surtout depuis mon téléphone, pour réfléchir et avancer.",
+    status: "active"
+  },
+  {
+    id: "hub-structure",
+    title: "Structuration du Hub",
+    description: "Consolider l'espace privé où je documente mes idées et mes projets.",
+    status: "active"
+  },
+  {
+    id: "project-backups",
+    title: "Projet de sauvegardes",
+    description: "Définir une stratégie chiffrée pour sauvegarder et, si utile, versionner les données des projets.",
+    status: "active"
+  },
+  {
+    id: "journal-project",
+    title: "Projet de journal",
+    description: "Centraliser les exports de conversations et leurs synthèses, avec des détails à venir.",
     status: "active"
   },
   {
@@ -73,13 +91,6 @@ export const nowItems: NowItem[] = [
     id: "moving-ai",
     title: "Explorations en mouvement",
     description: "Marcher, courir, observer et dialoguer avec une IA comme compagnon de route.",
-    status: "next"
-  },
-  {
-    id: "hub-structure",
-    title: "Structuration du Hub",
-    description:
-      "Consolider un espace privé où je documente mes idées de manière détaillée. Une version publique viendra en cours de route, le temps de stabiliser mes priorités.",
     status: "next"
   },
   {

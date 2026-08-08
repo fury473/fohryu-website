@@ -78,6 +78,18 @@ export const projects: Project[] = [
     sortOrder: 30
   },
   {
+    id: "project-backups",
+    title: "Projet de sauvegardes",
+    shortDescription:
+      "Une stratégie de sauvegardes chiffrées pour protéger et, lorsque pertinent, versionner les données de mes projets.",
+    category: "Infrastructure / données",
+    status: "active",
+    visibility: "private",
+    links: [],
+    featured: false,
+    sortOrder: 35
+  },
+  {
     id: "explorations-ai",
     title: "Explorations w/ AI",
     shortDescription:
