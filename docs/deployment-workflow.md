@@ -67,11 +67,13 @@ doit être créée directement en Ready for review. Ce statut indique seulement 
 la PR peut être reviewée et éventuellement mergée ; il n'autorise jamais le
 merge.
 
-Lors de la création, demander la review du propriétaire du dépôt lorsque GitHub
-l'autorise et appliquer les labels existants correspondant au changement, par
-exemple `bug`, `documentation` ou `enhancement`. Si le propriétaire est aussi
-l'auteur de la PR et que GitHub interdit l'auto-review, signaler cette limite au
-lieu de choisir un autre reviewer.
+Lors de la création, assigner le propriétaire du dépôt à la PR et appliquer les
+labels existants correspondant au changement, par exemple `bug`, `documentation`
+ou `enhancement`. Demander sa review uniquement lorsque la PR a été créée par une
+identité d'automatisation distincte, telle qu'une GitHub App. Lorsque la PR est
+créée sous le propre compte du propriétaire, ne pas tenter d'auto-review :
+l'assignation et la décision explicite de merge constituent le point de contrôle
+manuel.
 
 Après chaque commit supplémentaire poussé sur une PR ouverte, réévaluer son
 titre, sa description, la liste des validations, ses labels et son statut Draft.

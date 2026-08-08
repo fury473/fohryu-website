@@ -98,8 +98,8 @@ Cloudflare preview.
 
 Create a pull request as Draft only when its current scope is knowingly
 incomplete or has a known blocker. Otherwise create it as Ready for review.
-Request the repository owner as reviewer when GitHub permits it, and apply the
-relevant existing labels for the change type.
+Apply the relevant existing labels for the change type and assign the repository
+owner to the pull request.
 
 When additional commits are added to an open pull request, reassess its title,
 description, validation notes, labels and Draft status. Update that metadata and
@@ -107,9 +107,10 @@ mark the pull request Ready for review without separate user confirmation once
 its intended scope is complete and no known blocker remains. GitHub's edit
 history preserves traceability. Ready for review never authorizes merging.
 
-If GitHub prevents requesting the repository owner because that account is also
-the pull request author, report the limitation instead of selecting another
-reviewer.
+Request the repository owner as reviewer only when the pull request was created
+by a distinct automation identity, such as a GitHub App. When the pull request is
+created under the owner's own account, do not attempt self-review; keep the owner
+assigned and leave the explicit merge decision as the manual review point.
 
 Do not merge pull requests locally or remotely unless the user explicitly asks
 for it. Do not add a root `package.json` version; public software versioning is

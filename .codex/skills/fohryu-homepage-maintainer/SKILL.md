@@ -53,9 +53,11 @@ entry point; the other files remain the source of truth.
    the pull request without requesting separate confirmation. Use Draft only
    when the intended scope is knowingly incomplete or blocked; otherwise open it
    as Ready for review. Stop before merge.
-8. Apply relevant existing labels and request the user as reviewer when GitHub
-   permits it. If the user is also the pull request author and self-review is
-   prohibited, report the limitation instead of selecting another reviewer.
+8. Apply relevant existing labels and assign the user to the pull request.
+   Request the user as reviewer only when a distinct automation identity, such
+   as a GitHub App, created the pull request. When the user's own account created
+   it, do not attempt self-review; preserve the explicit merge decision as the
+   manual review point.
 9. After pushing any additional commit to an open pull request, reassess its
    title, description, validation notes, labels and Draft status. Update them
    without requesting confirmation, and mark the pull request Ready for review
