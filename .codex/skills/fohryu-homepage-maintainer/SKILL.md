@@ -51,9 +51,12 @@ entry point; the other files remain the source of truth.
    changes.
 7. For software or infrastructure work, create the branch, commit, push and open
    the pull request without requesting separate confirmation. Stop before merge.
-8. For pure editorial work on `main`, require an explicit request before commit
+8. After pushing any additional commit to an open pull request, reassess its
+   title, description and validation notes. Update them without requesting
+   confirmation when they no longer describe the current changes accurately.
+9. For pure editorial work on `main`, require an explicit request before commit
    and push because the push deploys to production.
-9. Require an explicit request before merging, creating or pushing a tag,
+10. Require an explicit request before merging, creating or pushing a tag,
    deploying manually to production, force-pushing or rewriting history.
 
 ## Maintenance Heuristics

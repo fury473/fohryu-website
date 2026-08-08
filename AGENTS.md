@@ -96,6 +96,12 @@ without asking for separate confirmation at each step. Treat the pull request as
 the user's review point. A non-production branch push may trigger a public
 Cloudflare preview.
 
+When additional commits are added to an open pull request, reassess its title,
+description and validation notes. Update that metadata whenever the new changes
+are not already represented accurately. This maintenance does not require
+separate user confirmation; GitHub's pull request edit history preserves its
+traceability.
+
 Do not merge pull requests locally or remotely unless the user explicitly asks
 for it. Do not add a root `package.json` version; public software versioning is
 derived from Git tags as documented in `docs/deployment-workflow.md`.

@@ -60,6 +60,13 @@ ouvrir la PR. La PR constitue le point de validation humaine avant le merge. Un
 push sur une branche non-production peut déclencher automatiquement une preview
 publique Cloudflare.
 
+Après chaque commit supplémentaire poussé sur une PR ouverte, réévaluer son
+titre, sa description et la liste des validations. Mettre ces métadonnées à jour
+si le nouveau périmètre, les nouveaux fichiers ou les nouvelles vérifications ne
+sont plus décrits fidèlement. Cette maintenance de la PR ne demande aucune
+validation utilisateur supplémentaire ; l'historique des éditions GitHub en
+conserve la traçabilité.
+
 Le merge, la création ou le push d'un tag, le déploiement manuel en production,
 le force-push et la réécriture d'historique nécessitent toujours une demande
 explicite.
