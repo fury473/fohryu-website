@@ -96,11 +96,20 @@ without asking for separate confirmation at each step. Treat the pull request as
 the user's review point. A non-production branch push may trigger a public
 Cloudflare preview.
 
+Create a pull request as Draft only when its current scope is knowingly
+incomplete or has a known blocker. Otherwise create it as Ready for review.
+Request the repository owner as reviewer when GitHub permits it, and apply the
+relevant existing labels for the change type.
+
 When additional commits are added to an open pull request, reassess its title,
-description and validation notes. Update that metadata whenever the new changes
-are not already represented accurately. This maintenance does not require
-separate user confirmation; GitHub's pull request edit history preserves its
-traceability.
+description, validation notes, labels and Draft status. Update that metadata and
+mark the pull request Ready for review without separate user confirmation once
+its intended scope is complete and no known blocker remains. GitHub's edit
+history preserves traceability. Ready for review never authorizes merging.
+
+If GitHub prevents requesting the repository owner because that account is also
+the pull request author, report the limitation instead of selecting another
+reviewer.
 
 Do not merge pull requests locally or remotely unless the user explicitly asks
 for it. Do not add a root `package.json` version; public software versioning is

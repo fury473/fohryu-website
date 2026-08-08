@@ -60,12 +60,26 @@ ouvrir la PR. La PR constitue le point de validation humaine avant le merge. Un
 push sur une branche non-production peut déclencher automatiquement une preview
 publique Cloudflare.
 
+Une PR doit être créée en Draft uniquement lorsque son périmètre actuel est
+sciemment incomplet ou qu'un blocage connu empêche sa review. Si le changement
+prévu est cohérent, validé de façon proportionnée et sans blocage connu, la PR
+doit être créée directement en Ready for review. Ce statut indique seulement que
+la PR peut être reviewée et éventuellement mergée ; il n'autorise jamais le
+merge.
+
+Lors de la création, demander la review du propriétaire du dépôt lorsque GitHub
+l'autorise et appliquer les labels existants correspondant au changement, par
+exemple `bug`, `documentation` ou `enhancement`. Si le propriétaire est aussi
+l'auteur de la PR et que GitHub interdit l'auto-review, signaler cette limite au
+lieu de choisir un autre reviewer.
+
 Après chaque commit supplémentaire poussé sur une PR ouverte, réévaluer son
-titre, sa description et la liste des validations. Mettre ces métadonnées à jour
-si le nouveau périmètre, les nouveaux fichiers ou les nouvelles vérifications ne
-sont plus décrits fidèlement. Cette maintenance de la PR ne demande aucune
-validation utilisateur supplémentaire ; l'historique des éditions GitHub en
-conserve la traçabilité.
+titre, sa description, la liste des validations, ses labels et son statut Draft.
+Mettre ces métadonnées à jour si le nouveau périmètre, les nouveaux fichiers ou
+les nouvelles vérifications ne sont plus décrits fidèlement. Passer la PR en
+Ready for review dès que son périmètre prévu est complet et sans blocage connu.
+Cette maintenance de la PR ne demande aucune validation utilisateur
+supplémentaire ; l'historique des éditions GitHub en conserve la traçabilité.
 
 Le merge, la création ou le push d'un tag, le déploiement manuel en production,
 le force-push et la réécriture d'historique nécessitent toujours une demande

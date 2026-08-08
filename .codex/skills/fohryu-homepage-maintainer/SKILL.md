@@ -50,13 +50,20 @@ entry point; the other files remain the source of truth.
 6. Run `npm run build` for TypeScript, rendering, style, asset or dependency
    changes.
 7. For software or infrastructure work, create the branch, commit, push and open
-   the pull request without requesting separate confirmation. Stop before merge.
-8. After pushing any additional commit to an open pull request, reassess its
-   title, description and validation notes. Update them without requesting
-   confirmation when they no longer describe the current changes accurately.
-9. For pure editorial work on `main`, require an explicit request before commit
+   the pull request without requesting separate confirmation. Use Draft only
+   when the intended scope is knowingly incomplete or blocked; otherwise open it
+   as Ready for review. Stop before merge.
+8. Apply relevant existing labels and request the user as reviewer when GitHub
+   permits it. If the user is also the pull request author and self-review is
+   prohibited, report the limitation instead of selecting another reviewer.
+9. After pushing any additional commit to an open pull request, reassess its
+   title, description, validation notes, labels and Draft status. Update them
+   without requesting confirmation, and mark the pull request Ready for review
+   when its intended scope is complete and no known blocker remains. Ready for
+   review does not authorize merge.
+10. For pure editorial work on `main`, require an explicit request before commit
    and push because the push deploys to production.
-10. Require an explicit request before merging, creating or pushing a tag,
+11. Require an explicit request before merging, creating or pushing a tag,
    deploying manually to production, force-pushing or rewriting history.
 
 ## Maintenance Heuristics
