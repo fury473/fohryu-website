@@ -325,6 +325,38 @@ p {
   background: rgba(255, 255, 255, 0.04);
 }
 
+.button--live {
+  gap: 0.52rem;
+  color: #f8f0ff;
+  background:
+    linear-gradient(180deg, rgba(183, 133, 255, 0.22), rgba(145, 70, 255, 0.13)),
+    rgba(255, 255, 255, 0.045);
+  border-color: rgba(191, 148, 255, 0.72);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.09),
+    0 0 20px rgba(145, 70, 255, 0.16);
+}
+
+.button--live:hover {
+  color: #ffffff;
+  background:
+    linear-gradient(180deg, rgba(191, 148, 255, 0.3), rgba(145, 70, 255, 0.2)),
+    rgba(255, 255, 255, 0.06);
+  border-color: rgba(210, 178, 255, 0.9);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 0 28px rgba(145, 70, 255, 0.25);
+}
+
+.button__live-dot {
+  flex: 0 0 auto;
+  width: 0.56rem;
+  height: 0.56rem;
+  background: #ff5a67;
+  border-radius: 999px;
+  box-shadow: 0 0 14px rgba(255, 90, 103, 0.72);
+}
+
 .hero__quote {
   max-width: 39rem;
   padding: 0.85rem 0 0.85rem 1rem;
@@ -1371,7 +1403,8 @@ p {
     animation: now-status-pulse 1800ms ease-in-out infinite;
   }
 
-  .twitch-live__status-dot {
+  .twitch-live__status-dot,
+  .button__live-dot {
     animation: twitch-live-pulse 1600ms ease-in-out infinite;
   }
 }

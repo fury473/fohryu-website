@@ -118,7 +118,7 @@ function renderHero(): HTMLElement {
                 children: [
                   link("Voir les projets", "#projets", "button button--primary"),
                   link("Récemment", "#activite", "button button--secondary"),
-                  link("Maintenant", "#maintenant", "button button--secondary")
+                  renderTwitchLiveHeroLink()
                 ]
               }),
               el("p", {
@@ -183,6 +183,17 @@ function renderHero(): HTMLElement {
         ]
       })
     ]
+  });
+}
+
+function renderTwitchLiveHeroLink(): HTMLAnchorElement {
+  return el("a", {
+    className: "button button--secondary",
+    text: "Maintenant",
+    attrs: {
+      href: "#maintenant",
+      "data-twitch-live-link": "true"
+    }
   });
 }
 
@@ -326,14 +337,25 @@ type TwitchPlayerApi = {
 function setupTwitchLive(): void {
   const section = document.querySelector<HTMLElement>(".twitch-live");
   const chatContainer = section?.querySelector<HTMLElement>("[data-twitch-chat]");
+  const liveLink = document.querySelector<HTMLAnchorElement>("[data-twitch-live-link]");
   const hostname = window.location.hostname;
 
-  if (!section || !chatContainer || !hostname) {
+  if (!section || !chatContainer || !liveLink || !hostname) {
     return;
   }
 
   const showLive = (player: TwitchPlayerInstance): void => {
     section.hidden = false;
+    liveLink.href = "#live";
+    liveLink.classList.add("button--live");
+    liveLink.setAttribute("aria-label", "Accéder au direct Twitch en cours");
+    liveLink.replaceChildren(
+      el("span", {
+        className: "button__live-dot",
+        attrs: { "aria-hidden": "true" }
+      }),
+      "En direct"
+    );
     section.querySelectorAll<HTMLElement>(".reveal").forEach((target) => {
       target.classList.add("is-visible");
     });
@@ -365,6 +387,10 @@ function setupTwitchLive(): void {
   const hideLive = (): void => {
     section.hidden = true;
     chatContainer.replaceChildren();
+    liveLink.href = "#maintenant";
+    liveLink.classList.remove("button--live");
+    liveLink.removeAttribute("aria-label");
+    liveLink.textContent = "Maintenant";
   };
 
   loadTwitchPlayerApi()
