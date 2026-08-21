@@ -15,8 +15,10 @@ ou un blog complet. Elle doit :
 - donner accès aux espaces publics, prévus ou protégés ;
 - rester statique, simple à maintenir et facile à faire évoluer.
 
-Le site n'embarque pas de CMS, de backend ni de widget tiers. Les contenus affichés
-sont déclarés dans des fichiers TypeScript versionnés.
+Le site n'embarque pas de CMS ni de backend. Les contenus affichés sont déclarés
+dans des fichiers TypeScript versionnés. Le player et le chat Twitch constituent
+la seule intégration tierce dynamique : ils servent le direct et restent masqués
+hors diffusion.
 
 ## Pipeline de rendu
 
@@ -153,6 +155,17 @@ bordure extérieure animée lorsque les préférences de mouvement le permettent
 sujets à suivre gardent une couleur distincte plus discrète. Une légende générée
 depuis `nowStatusOrder` rend les états visibles.
 
+Un panneau Twitch précède la liste des sujets lorsqu'une diffusion est en cours.
+Le player JavaScript officiel écoute les événements `ONLINE` et `OFFLINE` du canal
+`fury473` : le panneau est masqué par défaut, devient visible pendant le direct,
+puis disparaît à sa fin. Le chat n'est créé qu'au passage en ligne et utilise le
+nom d'hôte courant comme paramètre `parent`, ce qui rend l'intégration compatible
+avec `fohryu.com`, le développement local et les URLs de preview sans variable de
+build. Le player démarre en sourdine afin d'éviter une lecture audio inattendue.
+
+Cette détection ne demande ni Client ID, ni secret, ni appel à l'API Helix. Si le
+script Twitch est bloqué ou indisponible, le panneau reste simplement masqué.
+
 ### Projets
 
 La section Projets est découpée en deux groupes :
@@ -239,6 +252,8 @@ Les principaux choix d'accessibilité sont :
 - liens externes ouverts avec `target="_blank"` et `rel="noreferrer"` ;
 - états de focus visibles ;
 - animation de bordure de l'état actif limitée par `prefers-reduced-motion` ;
+- panneau Twitch absent de l'arbre d'accessibilité hors direct, titres explicites
+  sur les iframes et état `En direct` annoncé poliment lors de son apparition ;
 - modale avec `role="dialog"`, `aria-modal`, titre et description associés ;
 - texte complet de l'easter egg disponible en `.sr-only`, sans dupliquer la
   lecture de l'image ;
@@ -282,6 +297,8 @@ La mise en page s'appuie sur des grilles fluides et des contraintes de largeur :
 - `.section__inner` limite la largeur globale ;
 - le hero passe de deux colonnes à une colonne selon la largeur disponible ;
 - les grilles de cartes utilisent `auto-fit` et `minmax(...)` ;
+- le direct Twitch passe du player et du chat côte à côte à une colonne sous
+  `980px` ;
 - la modale de l'easter egg limite l'image sur desktop, puis autorise le scroll
   vertical sur mobile pour préserver la lisibilité du texte intégré à l'image.
 

@@ -34,6 +34,9 @@ const KONAMI_SEQUENCE = [
 
 const FURY_ORIGIN_TAP_COUNT = 7;
 const FURY_ORIGIN_TAP_RESET_MS = 1800;
+const TWITCH_CHANNEL = "fury473";
+const TWITCH_PLAYER_ID = "twitch-live-player";
+const TWITCH_PLAYER_SCRIPT_URL = "https://player.twitch.tv/js/embed/v1.js";
 
 const FURY_ORIGIN_TEXT = [
   "Fury est un pseudonyme créé dans les années 2000 lorsque je cherchais un nom durant mes games fun de Counter-Strike: Source (l’époque des chats vocaux ouverts sur serveurs privés).",
@@ -63,6 +66,7 @@ export function renderApp(root: HTMLElement): void {
   );
 
   setupRevealAnimations();
+  setupTwitchLive();
   setupFuryOriginEasterEgg();
 }
 
@@ -184,6 +188,7 @@ function renderHero(): HTMLElement {
 
 function renderNow(): HTMLElement {
   return renderSection("maintenant", "Maintenant", "Ce qui est en cours", [
+    renderTwitchLive(),
     el("div", {
       className: "now-panel reveal",
       children: [
@@ -231,6 +236,192 @@ function renderNow(): HTMLElement {
       ]
     })
   ]);
+}
+
+function renderTwitchLive(): HTMLElement {
+  return el("article", {
+    className: "twitch-live",
+    attrs: {
+      id: "live",
+      "aria-labelledby": "twitch-live-title",
+      hidden: true
+    },
+    children: [
+      el("div", {
+        className: "twitch-live__heading reveal",
+        children: [
+          el("div", {
+            children: [
+              el("p", {
+                className: "twitch-live__status",
+                attrs: { "aria-live": "polite" },
+                children: [
+                  el("span", {
+                    className: "twitch-live__status-dot",
+                    attrs: { "aria-hidden": "true" }
+                  }),
+                  "En direct"
+                ]
+              }),
+              el("h3", {
+                text: "Fury est en live sur Twitch",
+                attrs: { id: "twitch-live-title" }
+              }),
+              el("p", {
+                text: "Le direct et son chat sont accessibles ici tant que la diffusion est en cours."
+              })
+            ]
+          }),
+          link(
+            "Ouvrir sur Twitch",
+            `https://www.twitch.tv/${TWITCH_CHANNEL}`,
+            "button button--secondary"
+          )
+        ]
+      }),
+      el("div", {
+        className: "twitch-live__embeds reveal",
+        children: [
+          el("div", {
+            className: "twitch-live__player",
+            attrs: { id: TWITCH_PLAYER_ID }
+          }),
+          el("div", {
+            className: "twitch-live__chat",
+            attrs: { "data-twitch-chat": "true" }
+          })
+        ]
+      })
+    ]
+  });
+}
+
+type TwitchPlayerInstance = {
+  addEventListener: (event: string, callback: () => void) => void;
+  play: () => void;
+  setMuted: (muted: boolean) => void;
+};
+
+type TwitchPlayerConstructor = {
+  new (
+    elementId: string,
+    options: {
+      autoplay: boolean;
+      channel: string;
+      height: string;
+      muted: boolean;
+      parent: string[];
+      width: string;
+    }
+  ): TwitchPlayerInstance;
+  OFFLINE: string;
+  ONLINE: string;
+  READY: string;
+};
+
+type TwitchPlayerApi = {
+  Player: TwitchPlayerConstructor;
+};
+
+function setupTwitchLive(): void {
+  const section = document.querySelector<HTMLElement>(".twitch-live");
+  const chatContainer = section?.querySelector<HTMLElement>("[data-twitch-chat]");
+  const hostname = window.location.hostname;
+
+  if (!section || !chatContainer || !hostname) {
+    return;
+  }
+
+  const showLive = (player: TwitchPlayerInstance): void => {
+    section.hidden = false;
+    section.querySelectorAll<HTMLElement>(".reveal").forEach((target) => {
+      target.classList.add("is-visible");
+    });
+
+    if (!chatContainer.querySelector("iframe")) {
+      const chatUrl = new URL(`https://www.twitch.tv/embed/${TWITCH_CHANNEL}/chat`);
+      chatUrl.searchParams.set("parent", hostname);
+      chatUrl.searchParams.set("darkpopout", "true");
+
+      chatContainer.append(
+        el("iframe", {
+          attrs: {
+            src: chatUrl.toString(),
+            title: `Chat du direct Twitch de ${TWITCH_CHANNEL}`,
+            loading: "lazy",
+            sandbox:
+              "allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-modals"
+          }
+        })
+      );
+    }
+
+    window.requestAnimationFrame(() => {
+      player.setMuted(true);
+      player.play();
+    });
+  };
+
+  const hideLive = (): void => {
+    section.hidden = true;
+    chatContainer.replaceChildren();
+  };
+
+  loadTwitchPlayerApi()
+    .then((twitch) => {
+      const player = new twitch.Player(TWITCH_PLAYER_ID, {
+        autoplay: true,
+        channel: TWITCH_CHANNEL,
+        height: "100%",
+        muted: true,
+        parent: [hostname],
+        width: "100%"
+      });
+
+      player.addEventListener(twitch.Player.READY, () => {
+        const iframe = section.querySelector<HTMLIFrameElement>(".twitch-live__player iframe");
+        iframe?.setAttribute("title", `Direct Twitch de ${TWITCH_CHANNEL}`);
+      });
+      player.addEventListener(twitch.Player.ONLINE, () => showLive(player));
+      player.addEventListener(twitch.Player.OFFLINE, hideLive);
+    })
+    .catch(() => {
+      hideLive();
+    });
+}
+
+function loadTwitchPlayerApi(): Promise<TwitchPlayerApi> {
+  const twitchWindow = window as Window & { Twitch?: TwitchPlayerApi };
+
+  if (twitchWindow.Twitch) {
+    return Promise.resolve(twitchWindow.Twitch);
+  }
+
+  return new Promise((resolve, reject) => {
+    const existingScript = document.querySelector<HTMLScriptElement>(
+      `script[src="${TWITCH_PLAYER_SCRIPT_URL}"]`
+    );
+    const script = existingScript ?? document.createElement("script");
+
+    const handleLoad = (): void => {
+      if (twitchWindow.Twitch) {
+        resolve(twitchWindow.Twitch);
+      } else {
+        reject(new Error("L'API du player Twitch est indisponible."));
+      }
+    };
+
+    script.addEventListener("load", handleLoad, { once: true });
+    script.addEventListener("error", () => reject(new Error("Le player Twitch n'a pas pu être chargé.")), {
+      once: true
+    });
+
+    if (!existingScript) {
+      script.src = TWITCH_PLAYER_SCRIPT_URL;
+      script.async = true;
+      document.head.append(script);
+    }
+  });
 }
 
 function renderNowStatus(status: keyof typeof nowStatusLabels): HTMLElement {
