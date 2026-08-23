@@ -60,19 +60,19 @@ export const nowItems: NowItem[] = [
     id: "hub-structure",
     title: "Structuration du Hub",
     description: "Consolider l'espace privé où je documente mes idées et mes projets.",
-    status: "active"
+    status: "next"
   },
   {
     id: "project-backups",
     title: "Projet de sauvegardes",
     description: "Définir une stratégie chiffrée pour sauvegarder et, si utile, versionner les données des projets.",
-    status: "active"
+    status: "next"
   },
   {
     id: "journal-project",
     title: "Projet de journal",
     description: "Centraliser les exports de conversations et leurs synthèses, avec des détails à venir.",
-    status: "active"
+    status: "next"
   },
   {
     id: "fohryu-com-maintenance",
