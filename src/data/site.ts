@@ -104,7 +104,7 @@ export const nowItems: NowItem[] = [
     id: "stream-cohost",
     title: "AI co-host pour le streaming",
     description: "Préparer une présence IA capable d'accompagner le direct et son audience.",
-    status: "next"
+    status: "active"
   }
 ];
 
